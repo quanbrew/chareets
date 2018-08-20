@@ -2,6 +2,7 @@ import * as React from 'react';
 import './App.css';
 
 import logo from './logo.svg';
+import Information from './Information';
 
 class App extends React.Component {
   public render() {
@@ -14,6 +15,7 @@ class App extends React.Component {
         <p className="App-intro">
           A RPG character sheets generator.
         </p>
+        <Information/>
       </div>
     );
   }
