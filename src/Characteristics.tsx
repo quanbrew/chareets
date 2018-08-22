@@ -1,40 +1,31 @@
 import * as React from 'react';
-import {SyntheticEvent} from 'react';
 import {CharacterData, SheetContext} from "./CharacterData";
+import NumberField from './fields/NumberField';
 
-class Prop {
+interface Props {
   label: string;
   name: string;
 }
 
 
-class Field extends React.Component<Prop> {
+class Field extends React.Component<Props> {
   public render() {
     const label = this.props.label;
     const name = this.props.name;
     return (
       <SheetContext.Consumer>
-        {(character: CharacterData) => (<p>
-          <label htmlFor={name}>{label}: </label>
-          <input type="text" name={name} id={name}
-                 onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-                   let data = {};
-                   const value = Number(e.currentTarget.value);
-                   if (!isNaN(value)) {
-                     data[name] = e.currentTarget.value;
-                     character.updater(data);
-                   }
-                 }}
-                 value={character[name] === undefined ? "" : character[name]}
+        {(character: CharacterData) => (
+          <NumberField label={label} value={character[name]} name={name}
+                       updater={(n: number) => character.updater({[name]: n})}
           />
-        </p>)}
+        )}
       </SheetContext.Consumer>
     );
   }
 }
 
 
-export class Characteristics extends React.Component {
+class Characteristics extends React.Component {
   public render() {
     return (
       <div>

@@ -4,7 +4,7 @@ import './App.css';
 import logo from './logo.svg';
 import Information from './Information';
 import {CharacterData, SheetContext} from './CharacterData';
-import {Characteristics} from './Characteristics';
+import Characteristics from './Characteristics';
 
 
 class App extends React.Component<{}, CharacterData> {
