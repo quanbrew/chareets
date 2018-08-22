@@ -10,9 +10,7 @@ import Characteristics from './Characteristics';
 class App extends React.Component<{}, CharacterData> {
   constructor(props: {}) {
     super(props);
-    this.state = new CharacterData((update_data: object) => {
-      this.setState(update_data);
-    });
+    this.state = new CharacterData();
   }
   public render() {
     return (
@@ -24,10 +22,12 @@ class App extends React.Component<{}, CharacterData> {
         <p className="App-intro">
           A RPG character sheets generator.
         </p>
-        <p>欢迎你，{this.state.name === "" ? "不知名的冒险者" : this.state.name}</p>
+        <p>欢迎你，{this.state.information.name === "" ? "不知名的冒险者" : this.state.information.name}</p>
         <SheetContext.Provider value={this.state}>
-          <Information/>
-          <Characteristics updateCharacteristics={(next) => {
+          <Information updater={(next) => {
+            this.setState({information: next})
+          }}/>
+          <Characteristics updater={(next) => {
             this.setState({characteristics: next})
           }}/>
         </SheetContext.Provider>

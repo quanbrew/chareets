@@ -38,7 +38,7 @@ export class CharacteristicsData {
 
 
 interface Props {
-  updateCharacteristics: (next: CharacteristicsData) => void;
+  updater: (next: CharacteristicsData) => void;
 }
 
 
@@ -49,7 +49,7 @@ class Characteristics extends React.Component<Props, CharacteristicsData> {
   }
 
   public render() {
-    type Item = [keyof CharacteristicsData, string]
+    type Item = [keyof CharacteristicsData, string];
     const characteristics: Array<Item> = [
       ["str", "力量"],
       ["con", "体质"],
@@ -64,12 +64,12 @@ class Characteristics extends React.Component<Props, CharacteristicsData> {
     ];
 
     const field = (item: Item) => {
-      const name: keyof CharacteristicsData = item[0];
+      const key: keyof CharacteristicsData = item[0];
       const label: string = item[1];
       return <Field
-        label={label} name={name} key={name}
-        value={this.state[name]}
-        setValue={(value: number) => this.setCharacteristic(name, value)}
+        label={label} name={key} key={key}
+        value={this.state[key]}
+        setValue={(value: number) => this.setCharacteristic({[key]: value})}
       />
     };
     return (
@@ -80,11 +80,12 @@ class Characteristics extends React.Component<Props, CharacteristicsData> {
     )
   }
 
-  private setCharacteristic(name: keyof CharacteristicsData, value: number) {
-    this.setState({[name]: value}, () => {
-      this.props.updateCharacteristics(this.state)
+  private setCharacteristic(data: CharacteristicsData) {
+    this.setState(data, () => {
+      this.props.updater(this.state)
     })
   }
+
 }
 
 
