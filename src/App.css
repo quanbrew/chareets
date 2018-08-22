@@ -2,7 +2,6 @@
   font-family: monospace;
   max-width: 50em;
   margin: 3em auto;
-  text-align: right;
 }
 
 .App-logo {
@@ -17,4 +16,16 @@
 }
 
 .App-intro {
+}
+
+.field {
+  width: 50%;
+  display: inline-block;
+}
+
+.field label {
+  width: 5em;
+  text-align: right;
+  margin-right: 0.5em;
+  display: inline-block;
 }

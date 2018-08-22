@@ -22,6 +22,7 @@ class Field extends React.Component<FieldProps, {}> {
         name={this.props.name}
         value={this.props.value}
         updater={this.props.setValue}
+        className="field information-field number-field"
       />
     }
     else {
@@ -30,7 +31,9 @@ class Field extends React.Component<FieldProps, {}> {
           label={this.props.label}
           name={this.props.name}
           value={this.props.value}
-          updater={this.props.setValue}/>
+          updater={this.props.setValue}
+          className="field information"
+        />
       )
     }
   }
@@ -97,7 +100,7 @@ export class Information extends React.Component<Props, InformationData> {
       />
     });
     return (
-      <div>
+      <div className="information">
         <h2>信息</h2>
         {information}
       </div>

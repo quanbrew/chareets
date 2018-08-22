@@ -7,6 +7,7 @@ class Props {
   name: string;
   value?: number;
   updater: (x: number) => void;
+  className?: string;
 }
 
 
@@ -21,6 +22,7 @@ class NumberField extends React.Component<Props, {}> {
       }
     };
     return (<BasicField label={label} name={name} type="number"
+                        className={this.props.className}
                         value={this.value()} updater={update}/>);
   }
 

@@ -17,6 +17,7 @@ class Field extends React.Component<FieldProps> {
     return (
       <NumberField label={label} value={this.props.value} name={name}
                    updater={this.props.setValue}
+                   className="field number-field characteristics-field"
       />
     );
   }
@@ -73,7 +74,7 @@ class Characteristics extends React.Component<Props, CharacteristicsData> {
       />
     };
     return (
-      <div>
+      <div className="characteristics">
         <h2>特征</h2>
         {characteristics.map(field)}
       </div>

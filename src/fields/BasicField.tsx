@@ -5,6 +5,7 @@ class Props {
   name: string;
   type?: string;
   value?: string;
+  className?: string;
   updater: (value: string) => void;
 }
 
@@ -24,7 +25,7 @@ class BasicField extends React.Component<Props, {}> {
     const label = <label htmlFor={id}>{this.props.label}: </label>;
     const update = (e: React.SyntheticEvent<HTMLInputElement>) => this.props.updater(e.currentTarget.value);
     return (
-      <p>
+      <p className={this.props.className}>
         {label}
         <input name={id} type={type} id={id} value={value} onChange={update}/>
       </p>
