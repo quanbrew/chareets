@@ -17,8 +17,11 @@ class AgeField extends React.Component<Props, {}> {
         <p>{label}<input name={name} id={name} value={character[name]} onChange={
           (e: React.SyntheticEvent<HTMLInputElement>) => {
             let data = {};
-            data[name] = e.currentTarget.value;
-            character.updater(data);
+            const value = Number(character[name]);
+            if (!isNaN(value)) {
+              data[name] = e.currentTarget.value;
+              character.updater(data);
+            }
           }
         }/></p>
       )}</SheetContext.Consumer>);

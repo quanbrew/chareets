@@ -8,6 +8,7 @@ export class Information extends React.Component {
 
     return (
       <div>
+        <h2>信息</h2>
         <InformationField label="名称" name="name"/>
         <InformationField label="玩家" name="player"/>
         <InformationField label="职业" name="occupation"/>
