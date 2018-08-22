@@ -20,7 +20,7 @@ class NumberField extends React.Component<Props, {}> {
         this.props.updater(new_value);
       }
     };
-    return (<BasicField label={label} name={name}
+    return (<BasicField label={label} name={name} type="number"
                         value={this.value()} updater={update}/>);
   }
 

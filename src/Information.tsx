@@ -3,47 +3,36 @@ import NumberField from "./fields/NumberField";
 import BasicField from "./fields/BasicField";
 
 
-interface AgeProps {
-  name: "age";
-  label: string;
-  value: number;
-  setValue: (value: number) => void;
-}
-
-
-class AgeField extends React.Component<AgeProps, {}> {
-  render() {
-    return <NumberField
-      label={this.props.label}
-      name={this.props.name}
-      value={this.props.value}
-      updater={this.props.setValue}
-    />;
-  }
-}
-
-
-interface InfoProps {
+interface FieldProps {
   label: string;
   name: string;
-  value: string;
-  setValue: (value: string) => void;
+  value: string | number;
+  setValue: (value: string | number) => void;
 }
 
-class InformationField extends React.Component<InfoProps, {}> {
-  static defaultProps: Partial<InfoProps> = {
+class Field extends React.Component<FieldProps, {}> {
+  static defaultProps: Partial<FieldProps> = {
     value: "",
   };
 
   render() {
-
-    return (
-      <BasicField
+    if (typeof this.props.value === 'number') {
+      return <NumberField
         label={this.props.label}
         name={this.props.name}
         value={this.props.value}
-        updater={this.props.setValue}/>
-    )
+        updater={this.props.setValue}
+      />
+    }
+    else {
+      return (
+        <BasicField
+          label={this.props.label}
+          name={this.props.name}
+          value={this.props.value}
+          updater={this.props.setValue}/>
+      )
+    }
   }
 }
 
@@ -94,27 +83,18 @@ export class Information extends React.Component<Props, InformationData> {
     const information = information_item.map((item: Item) => {
       const key: keyof InformationData = item[0];
       const label: string = item[1];
-      if (key === "age") {
-        return <AgeField
-          value={this.state[key]}
-          name={key} key={key} label={label}
-          setValue={(value: number) => this.setInformation({[key]: value})}
-        />;
-      }
-      else {
-        return (
-          <InformationField
-            label={label}
-            name={key}
-            key={key}
-            value={this.state[key]}
-            setValue={(value: string) => {
-              const data = {};
-              data[key] = value;
-              this.setInformation(data);
-            }}
-          />)
-      }
+      const setValue = (value: string | number) => {
+        const data = {};
+        data[key] = value;
+        this.setInformation(data);
+      };
+      return <Field
+        label={label}
+        name={key}
+        key={key}
+        value={this.state[key]}
+        setValue={setValue}
+      />
     });
     return (
       <div>
@@ -125,9 +105,7 @@ export class Information extends React.Component<Props, InformationData> {
   }
 
   private setInformation<K extends keyof InformationData>(data: Pick<InformationData, K>) {
-    this.setState(data, () => {
-      this.props.updater(this.state)
-    });
+    this.setState(data, () => this.props.updater(this.state));
   }
 }
 

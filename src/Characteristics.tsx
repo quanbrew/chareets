@@ -81,9 +81,7 @@ class Characteristics extends React.Component<Props, CharacteristicsData> {
   }
 
   private setCharacteristic(data: CharacteristicsData) {
-    this.setState(data, () => {
-      this.props.updater(this.state)
-    })
+    this.setState(data, () => this.props.updater(this.state))
   }
 
 }
