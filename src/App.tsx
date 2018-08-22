@@ -27,7 +27,9 @@ class App extends React.Component<{}, CharacterData> {
         <p>欢迎你，{this.state.name === "" ? "不知名的冒险者" : this.state.name}</p>
         <SheetContext.Provider value={this.state}>
           <Information/>
-          <Characteristics/>
+          <Characteristics updateCharacteristics={(next) => {
+            this.setState({characteristics: next})
+          }}/>
         </SheetContext.Provider>
       </div>
     );

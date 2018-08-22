@@ -1,4 +1,5 @@
 import * as React from "react";
+import {CharacteristicsData} from "./Characteristics";
 
 export class CharacterData {
   updater: (data: Partial<CharacterData>) => void;
@@ -11,17 +12,7 @@ export class CharacterData {
   residence: string;
   birthplace: string;
 
-  // characteristics
-  str?: number;
-  con?: number;
-  siz?: number;
-  dex?: number;
-  app?: number;
-  int?: number;
-  pow?: number;
-  edu?: number;
-  luck?: number;
-  mov?: number;
+  characteristics: CharacteristicsData;
   constructor(updater: (data: Partial<CharacterData>) => void) {
     this.name = "";
     this.player = "";
@@ -30,7 +21,7 @@ export class CharacterData {
     this.residence = "";
     this.birthplace = "";
     this.updater = updater;
-
+    this.characteristics = new CharacteristicsData();
   }
 }
 
