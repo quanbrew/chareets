@@ -1,6 +1,6 @@
 import * as React from 'react';
 import NumberField from './fields/NumberField';
-import {CharacterData, SheetContext} from "./CharacterData";
+import {SheetContext, SheetData} from "./Sheet";
 
 
 interface FieldProps {
@@ -13,21 +13,20 @@ class Field extends React.Component<FieldProps> {
   public render() {
     const label = this.props.label;
     const name = this.props.name;
+    const field = (data: SheetData) => (
+      <NumberField
+        label={label} value={data.attributes.get(name)} name={name}
+        updater={(x: number) => data.update({attributes: data.attributes.set(name, x)})}
+        className="field number-field characteristics-field"/>
+    );
     return (
-
-      <SheetContext.Consumer>
-        {(data: CharacterData) => (<NumberField
-          label={label} value={data.attributes.get(name)} name={name}
-          updater={(x: number) => data.update({attributes: data.attributes.set(name, x)})}
-          className="field number-field characteristics-field"
-        />)}
-      </SheetContext.Consumer>
-
+      <SheetContext.Consumer>{field}</SheetContext.Consumer>
     );
   }
 }
 
 class Characteristics extends React.Component {
+
   public render() {
     return (
       <div className="characteristics">

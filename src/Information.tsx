@@ -1,8 +1,7 @@
 import * as React from 'react';
 import NumberField from "./fields/NumberField";
 import BasicField from "./fields/BasicField";
-import {CharacterData, SheetContext} from "./CharacterData";
-
+import {SheetContext, SheetData} from "./Sheet";
 
 interface FieldProps {
   label: string;
@@ -15,7 +14,7 @@ class Age extends React.Component<FieldProps, {}> {
     const name = this.props.name;
     return (
       <SheetContext.Consumer>
-        {(data: CharacterData) => {
+        {(data: SheetData) => {
           return <NumberField
             label={this.props.label}
             name={name}
@@ -36,7 +35,7 @@ class Field extends React.Component<FieldProps, {}> {
 
     return (
       <SheetContext.Consumer>
-        {(data: CharacterData) => (
+        {(data: SheetData) => (
           <BasicField
             label={this.props.label}
             name={name}

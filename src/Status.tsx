@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {CharacterData, SheetContext} from "./CharacterData";
+import {SheetContext, SheetData} from "./Sheet";
 import {Map} from "immutable";
 // import {CharacteristicsData} from "./Characteristics";
 import {div} from "./utils";
@@ -54,7 +54,7 @@ export class Status extends React.Component {
 
   render() {
     return (
-      <SheetContext.Consumer>{(data: CharacterData) => (
+      <SheetContext.Consumer>{(data: SheetData) => (
         <div className="status">
           <h2>状态</h2>
           <p>SAN: {Status.san(data.attributes)}</p>
