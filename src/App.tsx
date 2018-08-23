@@ -3,19 +3,19 @@ import './App.css';
 
 import logo from './logo.svg';
 import Information from './Information';
-import {CharacterData} from './CharacterData';
+import {CharacterData, SheetContext} from './CharacterData';
 import Characteristics from './Characteristics';
-import Status from './Status';
+import {Status} from './Status';
 
 
 class App extends React.Component<{}, CharacterData> {
   constructor(props: {}) {
     super(props);
-    this.state = new CharacterData();
+    this.state = new CharacterData((x) => this.setState(x));
   }
   public render() {
     return (
-      <React.StrictMode>
+      <React.StrictMode><SheetContext.Provider value={this.state}>
         <div className="App">
           <header className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
@@ -24,16 +24,12 @@ class App extends React.Component<{}, CharacterData> {
           <p className="App-intro">
             A RPG character sheets generator.
           </p>
-          <p>欢迎你，{this.state.information.name === "" ? "不知名的冒险者" : this.state.information.name}</p>
-          <Information updater={(next) => {
-            this.setState({information: next})
-          }}/>
-          <Characteristics updater={(next) => {
-            this.setState({characteristics: next})
-          }}/>
-          <Status characteristics={this.state.characteristics}/>
+          <p>欢迎你，{this.state.information.get("name", "不知名的冒险者")}</p>
+          <Information/>
+          <Characteristics/>
+          <Status/>
         </div>
-      </React.StrictMode>
+      </SheetContext.Provider></React.StrictMode>
     );
   }
 }

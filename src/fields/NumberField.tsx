@@ -11,14 +11,17 @@ class Props {
 }
 
 
-class NumberField extends React.Component<Props, {}> {
+class NumberField extends React.PureComponent<Props, {}> {
   render() {
     const name = this.props.name;
     const label = this.props.label;
     const update = (value: string) => {
-      const new_value = Number(value);
-      if (!isNaN(new_value)) {
-        this.props.updater(new_value);
+      if (/^\d+$/.test(value)) {
+        const number = Number(value);
+        // const range = 1000000000000000;
+        if (!isNaN(number) && number < 1e21) {
+          this.props.updater(Number(value));
+        }
       }
     };
     return (<BasicField label={label} name={name} type="number"
@@ -31,7 +34,7 @@ class NumberField extends React.Component<Props, {}> {
       return ""
     }
     else {
-      return String(this.props.value)
+      return this.props.value.toFixed()
     }
   }
 }

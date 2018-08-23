@@ -1,12 +1,11 @@
 import * as React from 'react';
 import NumberField from './fields/NumberField';
+import {CharacterData, SheetContext} from "./CharacterData";
 
 
 interface FieldProps {
   label: string;
-  name: keyof CharacteristicsData;
-  value?: number;
-  setValue: (x: number) => void;
+  name: string;
 }
 
 
@@ -15,74 +14,36 @@ class Field extends React.Component<FieldProps> {
     const label = this.props.label;
     const name = this.props.name;
     return (
-      <NumberField label={label} value={this.props.value} name={name}
-                   updater={this.props.setValue}
-                   className="field number-field characteristics-field"
-      />
+
+      <SheetContext.Consumer>
+        {(data: CharacterData) => (<NumberField
+          label={label} value={data.attributes.get(name)} name={name}
+          updater={(x: number) => data.update({attributes: data.attributes.set(name, x)})}
+          className="field number-field characteristics-field"
+        />)}
+      </SheetContext.Consumer>
+
     );
   }
 }
 
-
-export class CharacteristicsData {
-  str?: number;
-  con?: number;
-  siz?: number;
-  dex?: number;
-  app?: number;
-  int?: number;
-  pow?: number;
-  edu?: number;
-  luck?: number;
-}
-
-
-interface Props {
-  updater: (next: CharacteristicsData) => void;
-}
-
-
-class Characteristics extends React.Component<Props, CharacteristicsData> {
-  constructor(props: Props) {
-    super(props);
-    this.state = new CharacteristicsData();
-  }
-
+class Characteristics extends React.Component {
   public render() {
-    type Item = [keyof CharacteristicsData, string];
-    const characteristics: Array<Item> = [
-      ["str", "力量"],
-      ["con", "体质"],
-      ["siz", "体型"],
-      ["dex", "敏捷"],
-      ["app", "外貌"],
-      ["int", "智力"],
-      ["pow", "意志"],
-      ["edu", "教育"],
-      ["luck", "幸运"],
-    ];
-
-    const field = (item: Item) => {
-      const key: keyof CharacteristicsData = item[0];
-      const label: string = item[1];
-      return <Field
-        label={label} name={key} key={key}
-        value={this.state[key]}
-        setValue={(value: number) => this.setCharacteristic({[key]: value})}
-      />
-    };
     return (
       <div className="characteristics">
         <h2>特征</h2>
-        {characteristics.map(field)}
+        <Field label="力量" name="str"/>
+        <Field label="体质" name="con"/>
+        <Field label="体型" name="siz"/>
+        <Field label="敏捷" name="dex"/>
+        <Field label="外貌" name="app"/>
+        <Field label="智力" name="int"/>
+        <Field label="意志" name="pow"/>
+        <Field label="教育" name="edu"/>
+        <Field label="幸运" name="luck"/>
       </div>
     )
   }
-
-  private setCharacteristic(data: CharacteristicsData) {
-    this.setState(data, () => this.props.updater(this.state))
-  }
-
 }
 
 

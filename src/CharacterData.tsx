@@ -1,17 +1,21 @@
 import * as React from "react";
-import {CharacteristicsData} from "./Characteristics";
-import {InformationData} from "./Information";
+import {Map} from "immutable";
+
+type Updater = <K extends keyof CharacterData>(data: Pick<CharacterData, K>) => void;
 
 export class CharacterData {
-  information: InformationData;
-  characteristics: CharacteristicsData;
+  attributes: Map<string, number>;
+  information: Map<string, string>;
+  update: Updater;
 
-  constructor() {
-    this.information = new InformationData();
-    this.characteristics = new CharacteristicsData();
+  constructor(f: Updater) {
+    this.attributes = Map();
+    this.information = Map();
+    this.update = f;
   }
 }
 
-export const SheetContext = React.createContext(new CharacterData());
+export const SheetContext = React.createContext(new CharacterData((_) => {
+}));
 
 

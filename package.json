@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "immutable": "^3.8.2",
+    "lodash": "^4.17.10",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-scripts-ts": "2.17.0",
@@ -16,11 +17,11 @@
     "eject": "react-scripts-ts eject"
   },
   "devDependencies": {
-    "@types/react-select": "^2.0.2",
     "@types/jest": "^23.3.1",
     "@types/node": "^10.7.1",
     "@types/react": "^16.4.11",
     "@types/react-dom": "^16.0.7",
+    "@types/react-select": "^2.0.2",
     "typescript": "^3.0.1"
   }
 }

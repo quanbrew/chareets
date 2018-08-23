@@ -12,7 +12,7 @@ class Props {
 }
 
 
-class BasicField extends React.Component<Props, {}> {
+class BasicField extends React.PureComponent<Props, {}> {
 
   public static defaultProps: Partial<Props> = {
     type: "text",
