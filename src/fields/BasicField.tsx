@@ -6,7 +6,9 @@ class Props {
   type?: string;
   value?: string;
   className?: string;
+  placeholder?: string;
   updater: (value: string) => void;
+
 }
 
 
@@ -27,7 +29,7 @@ class BasicField extends React.Component<Props, {}> {
     return (
       <p className={this.props.className}>
         {label}
-        <input name={id} type={type} id={id} value={value} onChange={update}/>
+        <input name={id} type={type} id={id} value={value} onChange={update} placeholder={this.props.placeholder}/>
       </p>
     );
   }

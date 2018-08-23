@@ -34,7 +34,6 @@ export class CharacteristicsData {
   pow?: number;
   edu?: number;
   luck?: number;
-  mov?: number;
 }
 
 
@@ -61,7 +60,6 @@ class Characteristics extends React.Component<Props, CharacteristicsData> {
       ["pow", "意志"],
       ["edu", "教育"],
       ["luck", "幸运"],
-      ["mov", "移动力"],
     ];
 
     const field = (item: Item) => {

@@ -3,8 +3,9 @@ import './App.css';
 
 import logo from './logo.svg';
 import Information from './Information';
-import {CharacterData, SheetContext} from './CharacterData';
+import {CharacterData} from './CharacterData';
 import Characteristics from './Characteristics';
+import Status from './Status';
 
 
 class App extends React.Component<{}, CharacterData> {
@@ -24,14 +25,13 @@ class App extends React.Component<{}, CharacterData> {
             A RPG character sheets generator.
           </p>
           <p>欢迎你，{this.state.information.name === "" ? "不知名的冒险者" : this.state.information.name}</p>
-          <SheetContext.Provider value={this.state}>
-            <Information updater={(next) => {
-              this.setState({information: next})
-            }}/>
-            <Characteristics updater={(next) => {
-              this.setState({characteristics: next})
-            }}/>
-          </SheetContext.Provider>
+          <Information updater={(next) => {
+            this.setState({information: next})
+          }}/>
+          <Characteristics updater={(next) => {
+            this.setState({characteristics: next})
+          }}/>
+          <Status characteristics={this.state.characteristics}/>
         </div>
       </React.StrictMode>
     );
