@@ -3,12 +3,12 @@ import * as React from 'react';
 class Props {
   label: string;
   name: string;
-  type?: string;
-  value?: string;
+  type: string;
+  value: string;
   className?: string;
   placeholder?: string;
   updater: (value: string) => void;
-
+  editable: boolean;
 }
 
 
@@ -17,6 +17,7 @@ class BasicField extends React.PureComponent<Props, {}> {
   public static defaultProps: Partial<Props> = {
     type: "text",
     value: "",
+    editable: true,
   };
 
   render() {
@@ -26,10 +27,12 @@ class BasicField extends React.PureComponent<Props, {}> {
     const id = "field-" + name;
     const label = <label htmlFor={id}>{this.props.label}: </label>;
     const update = (e: React.SyntheticEvent<HTMLInputElement>) => this.props.updater(e.currentTarget.value);
+    const editable = this.props.editable;
     return (
       <p className={this.props.className}>
         {label}
-        <input name={id} type={type} id={id} value={value} onChange={update} placeholder={this.props.placeholder}/>
+        <input name={id} type={type} id={id} value={value} contentEditable={editable} disabled={editable}
+               onChange={update} placeholder={this.props.placeholder}/>
       </p>
     );
   }

@@ -1,15 +1,16 @@
 import * as React from 'react';
+import {Map} from "immutable";
 import NumberField from "./fields/NumberField";
 import BasicField from "./fields/BasicField";
 import {SheetContext, SheetData} from "./Sheet";
 
-interface FieldProps {
+interface AgeProps {
   label: string;
   name: string;
 }
 
 
-class Age extends React.Component<FieldProps, {}> {
+class Age extends React.Component<AgeProps, {}> {
   render() {
     const name = this.props.name;
     return (
@@ -19,7 +20,7 @@ class Age extends React.Component<FieldProps, {}> {
             label={this.props.label}
             name={name}
             value={data.attributes.get(name)}
-            updater={(x: number) => data.update({attributes: data.attributes.set(name, x)})}
+            editable={false}
             className="field information-field number-field"
           />
         }}
@@ -29,39 +30,52 @@ class Age extends React.Component<FieldProps, {}> {
 }
 
 
-class Field extends React.Component<FieldProps, {}> {
+interface FieldProps {
+  label: string;
+  name: string;
+  value: string;
+  set: (value: string) => void;
+}
+
+
+class Field extends React.PureComponent<FieldProps, {}> {
+  // componentDidUpdate() {console.log("updated")}
   render() {
     const name = this.props.name;
-
     return (
-      <SheetContext.Consumer>
-        {(data: SheetData) => (
-          <BasicField
-            label={this.props.label}
-            name={name}
-            value={data.information.get(name)}
-            updater={(x: string) => data.update({information: data.information.set(name, x)})}
-            className="field information"
-          />
-        )}
-      </SheetContext.Consumer>
+      <BasicField
+        label={this.props.label}
+        name={name}
+        value={this.props.value}
+        updater={this.props.set}
+        className="field information"
+      />
     )
   }
 }
 
 
-export class Information extends React.Component {
+interface Props {
+  information: Map<string, string>;
+  set: (key: string) => (value: string) => void;
+}
+
+
+export class Information extends React.Component<Props, {}> {
   public render() {
+    const name = (k: string) =>
+      ({name: k, value: this.props.information.get(k), set: this.props.set(k)});
+
     return (
       <div className="information">
         <h2>信息</h2>
-        <Field label="名称" name="name"/>
-        <Field label="玩家" name="player"/>
-        <Field label="职业" name="occupation"/>
+        <Field label="名称" {...name("name")}/>
+        <Field label="玩家" {...name("player")}/>
+        <Field label="职业" {...name("occupation")}/>
         <Age label="年龄" name="age"/>
-        <Field label="性别" name="sex"/>
-        <Field label="居住地" name="residence"/>
-        <Field label="出生地" name="birthplace"/>
+        <Field label="性别" {...name("sex")}/>
+        <Field label="居住地" {...name("residence")}/>
+        <Field label="出生地" {...name("birthplace")}/>
       </div>
     );
   }
