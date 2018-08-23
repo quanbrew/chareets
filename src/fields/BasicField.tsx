@@ -29,11 +29,12 @@ class BasicField extends React.PureComponent<Props, {}> {
     const update = (e: React.SyntheticEvent<HTMLInputElement>) => this.props.updater(e.currentTarget.value);
     const editable = this.props.editable;
     return (
-      <p className={this.props.className}>
+      <div className={this.props.className}>
         {label}
-        <input name={id} type={type} id={id} value={value} contentEditable={editable} disabled={editable}
+        <input name={id} type={type} id={id} value={value} contentEditable={editable} disabled={!editable}
                onChange={update} placeholder={this.props.placeholder}/>
-      </p>
+        {this.props.children}
+      </div>
     );
   }
 }

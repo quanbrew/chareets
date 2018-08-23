@@ -40,7 +40,7 @@ class NumberField extends React.PureComponent<Props, number> {
     };
     return (<BasicField label={label} name={name} type="number"
                         className={this.props.className} editable={this.props.editable}
-                        value={this.value()} updater={update}/>);
+                        value={this.value()} updater={update} children={this.props.children}/>);
   }
 
   private value(): string {
