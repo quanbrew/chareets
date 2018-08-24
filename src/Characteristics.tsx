@@ -1,5 +1,5 @@
 import * as React from 'react';
-import NumberField from './fields/NumberField';
+import NumberInput from './fields/NumberInput';
 import {Map} from "immutable";
 
 
@@ -15,17 +15,21 @@ interface FieldProps {
 class Field extends React.PureComponent<FieldProps> {
   public render() {
     const label = this.props.label;
-    const name = this.props.name;
     const value = this.props.value;
+    const id = this.props.name;
     const set = this.props.set;
     const max = this.props.max;
     let hint = this.props.children;
     if (hint === undefined && max !== undefined && value !== undefined && value > max) {
-      hint = <p>{label}最多{max}</p>;
+      hint = <span>{label}最多{max}</span>;
     }
-    return (<NumberField
-      label={label} value={value} name={name} updater={set}
-      className="field number-field characteristics-field">{hint}</NumberField>)
+    return (
+      <p>
+        <label htmlFor={id}>{label}</label>
+        <NumberInput value={value} updater={set} id={id}
+                     className="field number-field characteristics-field"/>
+        {hint}
+      </p>)
   }
 }
 

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {Map} from "immutable";
-import BasicField from "./fields/BasicField";
 
 interface FieldProps {
   label: string;
@@ -13,15 +12,16 @@ interface FieldProps {
 class Field extends React.PureComponent<FieldProps, {}> {
   // componentDidUpdate() {console.log("updated")}
   render() {
-    const name = this.props.name;
+    const id = this.props.name;
     return (
-      <BasicField
-        label={this.props.label}
-        name={name}
-        value={this.props.value}
-        updater={this.props.set}
-        className="field information"
-      />
+      <p>
+        <label htmlFor={id}>{this.props.label}</label>
+        <input
+          value={this.props.value} id={id}
+          onChange={(e) => this.props.set(e.currentTarget.value)}
+          className="field information"
+        />
+      </p>
     )
   }
 }

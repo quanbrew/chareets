@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Map} from "immutable";
 import {div} from "./utils";
-import NumberField from "./fields/NumberField";
+import NumberInput from "./fields/NumberInput";
 
 
 interface FieldProps {
@@ -29,13 +29,15 @@ class Field extends React.Component<FieldProps, FieldState> {
 
   render() {
     const max = this.props.max;
-    const label = this.props.label;
     const value = this.state.value;
+    const label = this.props.label;
     const updater = (v: number) => this.setState({value: v, edited: true});
+
     return (
-      <NumberField max={max} name={label} value={this.state.edited ? value : max} updater={updater}
-                   label={label}> / {max}
-      </NumberField>);
+      <p>
+        <label htmlFor={label}>{label}</label>
+        <NumberInput max={max} id={label} value={this.state.edited ? value : max} updater={updater}/> / {max}
+      </p>);
   }
 }
 
