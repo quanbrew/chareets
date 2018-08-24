@@ -217,7 +217,7 @@ export class Skills extends React.Component<Props, State> {
         <table>
           <tbody>
           <tr>
-            <th></th>
+            <th/>
             <th>名称</th>
             <th>初始值</th>
             <th>本职</th>
