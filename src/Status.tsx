@@ -34,10 +34,16 @@ class Field extends React.Component<FieldProps, FieldState> {
     const updater = (v: number) => this.setState({value: v, edited: true});
 
     return (
-      <p>
-        <label htmlFor={label}>{label}</label>
-        <NumberInput max={max} id={label} value={this.state.edited ? value : max} onChange={updater}/> / {max}
-      </p>);
+      <div className="field">
+        <label className="label" htmlFor={label}>{label}</label>
+        <div className="field has-addons">
+          <div className="control">
+            <NumberInput max={max} id={label} className="input"
+                         value={this.state.edited ? value : max} onChange={updater}/>
+          </div>
+          <div className="control"><a className="button is-static">/ {max}</a></div>
+        </div>
+      </div>);
   }
 }
 
@@ -51,10 +57,14 @@ export class Status extends React.Component<Props, {}> {
   render() {
     return (
       <div className="status">
-        <Field label="SAN" max={this.san()}/>
-        <Field label="MP" max={this.mp()}/>
-        <Field label="HP" max={this.hp()}/>
-        <div>移动力：{this.mov()}</div>
+        <h2 className="title is-4">状态</h2>
+
+        <div className="">
+          <Field label="HP" max={this.hp()}/>
+          <Field label="SAN" max={this.san()}/>
+          <Field label="MP" max={this.mp()}/>
+          <Field label="移动力" max={this.mov()}/>
+        </div>
       </div>
     )
   }

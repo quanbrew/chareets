@@ -25,12 +25,16 @@ class Field extends React.PureComponent<FieldProps> {
       hint = <span>{label}最多{max}</span>;
     }
     return (
-      <p>
-        <label htmlFor={id}>{label}</label>
-        <NumberInput value={value} onChange={set} id={id}
-                     className="field number-field characteristics-field"/>
-        {hint}
-      </p>)
+      <div className="field" style={{width: "8em", display: "inline-block"}}>
+        <label className="label" htmlFor={id}>{label}</label>
+        <div className="control">
+
+          <NumberInput value={value} onChange={set} id={id}
+                       style={{maxWidth: "4em"}}
+                       className="number-field is-large input characteristics-field"/>
+        </div>
+        <p className="help">{hint}</p>
+      </div>)
   }
 }
 
@@ -72,9 +76,25 @@ class AgeField extends React.PureComponent<FieldProps> {
         hint = <span>对教育进行4次增强检定。力量体质敏捷合计减 80 点。外貌减 25 点。</span>
       }
     }
-    return <Field {...this.props}>
-      <button onClick={() => this.props.set(this.auto_age())}>随机年龄</button>
-      {hint}</Field>
+    return (
+      <div className="field">
+        <label className="label" htmlFor={this.props.name}>{this.props.label}</label>
+        <div className="field has-addons">
+          <div className="control">
+            <NumberInput value={this.props.value} id={this.props.name}
+                         onChange={this.props.set}
+                         className="number-field input characteristics-field"/>
+          </div>
+
+          <div className="control">
+            <button className="button" onClick={() => this.props.set(this.auto_age())}>随机年龄</button>
+          </div>
+          <br/>
+        </div>
+        <p className="help">{hint}</p>
+
+      </div>
+    )
   }
 }
 
@@ -116,20 +136,32 @@ class Characteristics extends React.Component<Props, {}> {
         set: (v: number) => this.props.set(this.props.attributes.set(k, v))
       });
     return (
-      <div className="characteristics">
+      <div className="">
+        <h2 className="title is-4">属性</h2>
         <AgeField label="年龄" max={99} {...name("age")}/>
-        <p>点一下这里
-          <button onClick={this.auto_roll}>自动 roll 点</button>
-        </p>
-        <Field label="力量" max={99} {...name("str")}/>
-        <Field label="体质" max={99} {...name("con")}/>
-        <Field label="体型"          {...name("siz")}/>
-        <Field label="敏捷" max={99} {...name("dex")}/>
-        <Field label="外貌" max={99} {...name("app")}/>
-        <Field label="智力" max={99} {...name("int")}/>
-        <Field label="意志"          {...name("pow")}/>
-        <Field label="教育" max={99} {...name("edu")}/>
-        <Field label="幸运" max={99} {...name("luck")}/>
+        <div className="field">
+          <div className="control">
+            <button className="button" onClick={this.auto_roll}>自动 roll 点</button>
+          </div>
+        </div>
+        <div className="">
+          <div>
+            <Field label="力量" max={99} {...name("str")}/>
+            <Field label="体质" max={99} {...name("con")}/>
+            <Field label="体型"          {...name("siz")}/>
+          </div>
+          <div>
+            <Field label="敏捷" max={99} {...name("dex")}/>
+            <Field label="外貌" max={99} {...name("app")}/>
+            <Field label="智力" max={99} {...name("int")}/>
+          </div>
+          <div>
+
+            <Field label="意志"          {...name("pow")}/>
+            <Field label="教育" max={99} {...name("edu")}/>
+            <Field label="幸运" max={99} {...name("luck")}/>
+          </div>
+        </div>
       </div>
     )
   }

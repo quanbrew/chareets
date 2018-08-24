@@ -8,14 +8,11 @@
     "lodash": "^4.17.10",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
-    "react-scripts-ts": "2.17.0",
     "react-select": "^2.0.0"
   },
   "scripts": {
-    "start": "react-scripts-ts start",
-    "build": "react-scripts-ts build",
-    "test": "react-scripts-ts test --env=jsdom",
-    "eject": "react-scripts-ts eject"
+    "start": "parcel src/index.html",
+    "build": "parcel build src/index.html"
   },
   "devDependencies": {
     "@types/jest": "^23.3.1",
@@ -25,7 +22,9 @@
     "@types/react-select": "^2.0.2",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
+    "node-sass": "^4.9.3",
     "parcel-bundler": "^1.9.7",
+    "tslint": "^5.11.0",
     "typescript": "^3.0.1"
   }
 }

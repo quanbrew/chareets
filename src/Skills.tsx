@@ -158,21 +158,36 @@ class Skill extends React.Component<ISkill, SkillData> {
     const is_mythos = this.props.en === "Cthulhu Mythos";
     const change = sum === initial;
     return <tr className={change ? "skill-row changed" : "skill-row"}>
-      <td><input type="checkbox" disabled={is_mythos}/></td>
       <td>
+        <div className="field"><input type="checkbox" className="checkbox" disabled={is_mythos}/></div>
+      </td>
+      <td className="has-text-centered">
         <ruby>{this.props.label}
           <rt>{this.props.en}</rt>
         </ruby>
       </td>
       <td>{initial}</td>
-      <td><NumberInput max={100} value={occupation}
-                       editable={!is_mythos}
-                       onChange={(n) => this.setState({occupation: n})}/></td>
-      <td><NumberInput max={100} value={interest}
-                       editable={!is_mythos}
-                       onChange={(n) => this.setState({interest: n})}/></td>
-      <td><NumberInput max={100} value={grow}
-                       onChange={(n) => this.setState({grow: n})}/></td>
+      <td>
+        <div className="field">
+          <NumberInput max={100} value={occupation} className="input is-small"
+                       editable={!is_mythos} style={{maxWidth: "5em"}}
+                       onChange={(n) => this.setState({occupation: n})}/>
+        </div>
+      </td>
+      <td>
+        <div className="field">
+          <NumberInput max={100} value={interest} className="input is-small"
+                       editable={!is_mythos} style={{maxWidth: "5em"}}
+                       onChange={(n) => this.setState({interest: n})}/>
+        </div>
+      </td>
+      <td>
+        <div className="field">
+          <NumberInput max={100} value={grow} className="input is-small"
+                       style={{maxWidth: "5em"}}
+                       onChange={(n) => this.setState({grow: n})}/>
+        </div>
+      </td>
       <td className={sum >= 100 ? "skill-out-range" : undefined}>{sum}</td>
     </tr>;
   }
@@ -198,23 +213,25 @@ export class Skills extends React.Component<Props, State> {
   render() {
     const filter = this.state.filter;
     const rows = skills
-      .filter((row) => row.en.includes(filter) || row.label.includes(filter))
+      .filter((row) => row.en.toLowerCase().includes(filter) || row.label.includes(filter))
       .map((row) => {
         const props = {...row};
         if (props.initial == "edu") props.initial = this.props.attributes.get("edu", 0);
         else if (row.initial == "dex/2") props.initial = div(this.props.attributes.get("dex", 0), 2);
         return <Skill key={row.en} {...props}/>;
       });
-    const skill_filter = <p>
-      <label htmlFor="skill-filter">筛选</label>
-      <input id="skill-filter" value={filter} placeholder="筛选技能名"
+    const skill_filter = <div className="field">
+      <label className="label" htmlFor="skill-filter">筛选</label>
+      <div className="control">
+        <input id="skill-filter" className="input" value={filter} placeholder="筛选技能名"
              onChange={(e) => this.setState({filter: e.currentTarget.value})}/>
-    </p>;
+      </div>
+    </div>;
     return (
-      <div>
-        <h2>技能</h2>
+      <div className="container">
+        <h2 className="title is-4">技能</h2>
         {skill_filter}
-        <table>
+        <table className="table is-striped is-fullwidth is-narrow">
           <tbody>
           <tr>
             <th/>
