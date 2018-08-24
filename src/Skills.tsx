@@ -155,14 +155,25 @@ class Skill extends React.Component<ISkill, SkillData> {
     if (occupation !== undefined) sum += occupation;
     if (interest !== undefined) sum += interest;
     if (grow !== undefined) sum += grow;
-    return <tr>
-      <td><input type="checkbox"/></td>
-      <td>{this.props.label}</td>
+    const is_mythos = this.props.en === "Cthulhu Mythos";
+    const change = sum === initial;
+    return <tr className={change ? "skill-row changed" : "skill-row"}>
+      <td><input type="checkbox" disabled={is_mythos}/></td>
+      <td>
+        <ruby>{this.props.label}
+          <rt>{this.props.en}</rt>
+        </ruby>
+      </td>
       <td>{initial}</td>
-      <td><NumberInput max={100} value={occupation} onChange={(n) => this.setState({occupation: n})}/></td>
-      <td><NumberInput max={100} value={interest} onChange={(n) => this.setState({interest: n})}/></td>
-      <td><NumberInput max={100} value={grow} onChange={(n) => this.setState({grow: n})}/></td>
-      <td style={sum >= 100 ? {backgroundColor: "red"} : {}}>{sum}</td>
+      <td><NumberInput max={100} value={occupation}
+                       editable={!is_mythos}
+                       onChange={(n) => this.setState({occupation: n})}/></td>
+      <td><NumberInput max={100} value={interest}
+                       editable={!is_mythos}
+                       onChange={(n) => this.setState({interest: n})}/></td>
+      <td><NumberInput max={100} value={grow}
+                       onChange={(n) => this.setState({grow: n})}/></td>
+      <td className={sum >= 100 ? "skill-out-range" : undefined}>{sum}</td>
     </tr>;
   }
 }
@@ -173,26 +184,51 @@ interface Props {
 }
 
 
-export class Skills extends React.Component<Props> {
+interface State {
+  filter: string;
+}
+
+
+export class Skills extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {filter: ""}
+  }
+
   render() {
-    const rows = skills.map((row) => {
-      if (row.initial == "edu") row.initial = this.props.attributes.get("edu", NaN);
-      else if (row.initial == "dex/2") row.initial = div(this.props.attributes.get("dex", NaN), 2);
-      return <Skill {...row}/>;
-    });
+    const filter = this.state.filter;
+    const rows = skills
+      .filter((row) => row.en.includes(filter) || row.label.includes(filter))
+      .map((row) => {
+        const props = {...row};
+        if (props.initial == "edu") props.initial = this.props.attributes.get("edu", 0);
+        else if (row.initial == "dex/2") props.initial = div(this.props.attributes.get("dex", 0), 2);
+        return <Skill key={row.en} {...props}/>;
+      });
+    const skill_filter = <p>
+      <label htmlFor="skill-filter">筛选</label>
+      <input id="skill-filter" value={filter} placeholder="筛选技能名"
+             onChange={(e) => this.setState({filter: e.currentTarget.value})}/>
+    </p>;
     return (
-      <table>
-        <tr>
-          <th>成长</th>
-          <th>名称</th>
-          <th>初始值</th>
-          <th>本职</th>
-          <th>兴趣</th>
-          <th>成长</th>
-          <th>合计</th>
-        </tr>
-        {rows}
-      </table>
+      <div>
+        <h2>技能</h2>
+        {skill_filter}
+        <table>
+          <tbody>
+          <tr>
+            <th></th>
+            <th>名称</th>
+            <th>初始值</th>
+            <th>本职</th>
+            <th>兴趣</th>
+            <th>成长</th>
+            <th>合计</th>
+          </tr>
+          {rows}
+          </tbody>
+        </table>
+      </div>
     )
   }
 }

@@ -25,8 +25,8 @@ export const SheetContext = React.createContext(new SheetData());
 class Sheet extends React.Component<{}, SheetData> {
   setInformation = (key: string) => (value: string) =>
     this.setState({...this.state, information: this.state.information.set(key, value)});
-  setAttributes = (key: string) => (value: number) =>
-    this.setState({...this.state, attributes: this.state.attributes.set(key, value)});
+  setAttributes = (next: Map<string, number>): void =>
+    this.setState({...this.state, attributes: next});
 
   constructor(props: {}) {
     super(props);
