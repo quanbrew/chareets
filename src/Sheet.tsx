@@ -48,7 +48,7 @@ class Sheet extends React.Component<{}, SheetData> {
           <Information information={this.state.information} set={this.setInformation}/>
           <Characteristics attributes={this.state.attributes} set={this.setAttributes}/>
           <Status attributes={this.state.attributes}/>
-          <Skills/>
+          <Skills attributes={this.state.attributes}/>
         </div>
       </SheetContext.Provider></React.StrictMode>
     );

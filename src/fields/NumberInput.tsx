@@ -4,14 +4,14 @@ import * as React from 'react';
 class Props {
   id?: string;
   value?: number;
-  updater?: (x: number) => void;
+  onChange?: (x: number) => void;
   className?: string;
   editable: boolean;
   max: number;
 }
 
 
-class NumberInput extends React.PureComponent<Props, number> {
+export class NumberInput extends React.PureComponent<Props, number> {
   public static defaultProps: Partial<Props> = {
     editable: true,
     max: 1e21 - 1,
@@ -24,15 +24,15 @@ class NumberInput extends React.PureComponent<Props, number> {
         const number = Number(v);
         if (
           this.props.editable &&
-          this.props.updater !== undefined &&
+          this.props.onChange !== undefined &&
           !isNaN(number) &&
           number <= this.props.max
         ) {
-          this.props.updater(Number(v));
+          this.props.onChange(Number(v));
         }
       }
-      else if (v == "" && this.props.updater !== undefined) {
-        this.props.updater(0);
+      else if (v == "" && this.props.onChange !== undefined) {
+        this.props.onChange(0);
       }
     };
     return (

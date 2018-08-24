@@ -1,5 +1,7 @@
 import * as React from 'react';
-
+import {NumberInput} from "./fields/NumberInput";
+import {Map} from "immutable";
+import {div} from "./utils";
 
 interface SubSkill {
   label: string;
@@ -110,26 +112,87 @@ const skills: Array<ISkill> = [
 ];
 
 
-class Skill extends React.Component<ISkill> {
+class SuperSkill extends React.Component<ISkill> {
+  render() {
+    return null;
+  }
+}
+
+
+class BlankSkill extends React.Component<ISkill> {
+  render() {
+    return null;
+  }
+}
+
+
+interface SkillData {
+  occupation?: number;
+  interest?: number;
+  grow?: number;
+}
+
+
+class Skill extends React.Component<ISkill, SkillData> {
+  constructor(props: ISkill) {
+    super(props);
+    this.state = {}
+  }
+
   render() {
     if (this.props.contains !== undefined) {
-      return null;
+      return <SuperSkill {...this.props}/>
     }
     if (this.props.tag.some((tag) => tag === "blank")) {
-      return null;
+      return <BlankSkill {...this.props}/>
     }
+    const initial = this.props.initial;
+    const occupation = this.state.occupation;
+    const interest = this.state.interest;
+    const grow = this.state.grow;
+    let sum = 0;
+    if (typeof initial === "number") sum += initial;
+    if (occupation !== undefined) sum += occupation;
+    if (interest !== undefined) sum += interest;
+    if (grow !== undefined) sum += grow;
     return <tr>
       <td><input type="checkbox"/></td>
       <td>{this.props.label}</td>
-      <td>{this.props.initial}</td>
+      <td>{initial}</td>
+      <td><NumberInput max={100} value={occupation} onChange={(n) => this.setState({occupation: n})}/></td>
+      <td><NumberInput max={100} value={interest} onChange={(n) => this.setState({interest: n})}/></td>
+      <td><NumberInput max={100} value={grow} onChange={(n) => this.setState({grow: n})}/></td>
+      <td style={sum >= 100 ? {backgroundColor: "red"} : {}}>{sum}</td>
     </tr>;
   }
 }
 
 
-export class Skills extends React.Component {
+interface Props {
+  attributes: Map<string, number>;
+}
+
+
+export class Skills extends React.Component<Props> {
   render() {
-    const rows = skills.map((row) => (<Skill {...row}/>));
-    return (<table>{rows}</table>)
+    const rows = skills.map((row) => {
+      if (row.initial == "edu") row.initial = this.props.attributes.get("edu", NaN);
+      else if (row.initial == "dex/2") row.initial = div(this.props.attributes.get("dex", NaN), 2);
+      return <Skill {...row}/>;
+    });
+    return (
+      <table>
+        <tr>
+          <th>成长</th>
+          <th>名称</th>
+          <th>初始值</th>
+          <th>本职</th>
+          <th>兴趣</th>
+          <th>成长</th>
+          <th>合计</th>
+        </tr>
+        {rows}
+      </table>
+    )
   }
 }

@@ -26,7 +26,7 @@ class Field extends React.PureComponent<FieldProps> {
     return (
       <p>
         <label htmlFor={id}>{label}</label>
-        <NumberInput value={value} updater={set} id={id}
+        <NumberInput value={value} onChange={set} id={id}
                      className="field number-field characteristics-field"/>
         {hint}
       </p>)
