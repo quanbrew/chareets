@@ -10,14 +10,14 @@ interface FieldProps {
 
 
 class Field extends React.PureComponent<FieldProps, {}> {
-  // componentDidUpdate() {console.log("updated")}
   render() {
     const id = this.props.name;
+    const value = this.props.value;
     return (
       <div className="field is-vertical">
         <label className="label" htmlFor={id}>{this.props.label}</label>
         <div className="control"><input
-          value={this.props.value} id={id}
+          value={value} id={id}
           onChange={(e) => this.props.set(e.currentTarget.value)}
           className="field information input"
         /></div>
@@ -36,7 +36,7 @@ interface Props {
 export class Information extends React.Component<Props, {}> {
   public render() {
     const name = (k: string) =>
-      ({name: k, value: this.props.information.get(k), set: this.props.set(k)});
+      ({name: k, value: this.props.information.get(k, ""), set: this.props.set(k)});
     return (
       <div className="columns">
 

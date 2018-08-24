@@ -156,7 +156,6 @@ class Characteristics extends React.Component<Props, {}> {
             <Field label="智力" max={99} {...name("int")}/>
           </div>
           <div>
-
             <Field label="意志"          {...name("pow")}/>
             <Field label="教育" max={99} {...name("edu")}/>
             <Field label="幸运" max={99} {...name("luck")}/>

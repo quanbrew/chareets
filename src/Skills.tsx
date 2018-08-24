@@ -161,29 +161,28 @@ class Skill extends React.Component<ISkill, SkillData> {
       <td>
         <div className="field"><input type="checkbox" className="checkbox" disabled={is_mythos}/></div>
       </td>
-      <td className="has-text-centered">
-        <ruby>{this.props.label}
-          <rt>{this.props.en}</rt>
-        </ruby>
+      <td className="">
+        <span>{this.props.label}</span>
+        <p className="help">{this.props.en}</p>
       </td>
       <td>{initial}</td>
       <td>
         <div className="field">
-          <NumberInput max={100} value={occupation} className="input is-small"
+          <NumberInput max={100} value={occupation} className="input"
                        editable={!is_mythos} style={{maxWidth: "5em"}}
                        onChange={(n) => this.setState({occupation: n})}/>
         </div>
       </td>
       <td>
         <div className="field">
-          <NumberInput max={100} value={interest} className="input is-small"
+          <NumberInput max={100} value={interest} className="input"
                        editable={!is_mythos} style={{maxWidth: "5em"}}
                        onChange={(n) => this.setState({interest: n})}/>
         </div>
       </td>
       <td>
         <div className="field">
-          <NumberInput max={100} value={grow} className="input is-small"
+          <NumberInput max={100} value={grow} className="input"
                        style={{maxWidth: "5em"}}
                        onChange={(n) => this.setState({grow: n})}/>
         </div>
