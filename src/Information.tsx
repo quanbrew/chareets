@@ -14,13 +14,13 @@ class Field extends React.PureComponent<FieldProps, {}> {
     const id = this.props.name;
     const value = this.props.value;
     return (
-      <div className="field is-vertical">
-        <label className="label" htmlFor={id}>{this.props.label}</label>
-        <div className="control"><input
+      <div className="">
+        <label className="" htmlFor={id}>{this.props.label}</label>
+        <input
           value={value} id={id}
           onChange={(e) => this.props.set(e.currentTarget.value)}
-          className="field information input"
-        /></div>
+          className=""
+        />
       </div>
     )
   }
@@ -38,19 +38,13 @@ export class Information extends React.Component<Props, {}> {
     const name = (k: string) =>
       ({name: k, value: this.props.information.get(k, ""), set: this.props.set(k)});
     return (
-      <div className="columns">
-
-        <div className="column">
-
-          <Field label="名称" {...name("name")}/>
-          <Field label="玩家" {...name("player")}/>
-          <Field label="职业" {...name("occupation")}/>
-        </div>
-        <div className="column">
-          <Field label="性别" {...name("sex")}/>
-          <Field label="居住地" {...name("residence")}/>
-          <Field label="出生地" {...name("birthplace")}/>
-        </div>
+      <div className="">
+        <Field label="名称" {...name("name")}/>
+        <Field label="玩家" {...name("player")}/>
+        <Field label="职业" {...name("occupation")}/>
+        <Field label="性别" {...name("sex")}/>
+        <Field label="居住地" {...name("residence")}/>
+        <Field label="出生地" {...name("birthplace")}/>
       </div>
     );
   }

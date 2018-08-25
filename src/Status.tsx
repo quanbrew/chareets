@@ -31,18 +31,15 @@ class Field extends React.Component<FieldProps, FieldState> {
     const max = this.props.max;
     const value = this.state.value;
     const label = this.props.label;
-    const updater = (v: number) => this.setState({value: v, edited: true});
+    const onChange = (v: number) => this.setState({value: v, edited: true});
+    const upperLimitHint = <span className=""> / {max === undefined ? "?" : max}</span>;
 
     return (
-      <div className="field">
-        <label className="label" htmlFor={label}>{label}</label>
-        <div className="field has-addons">
-          <div className="control">
-            <NumberInput max={max} id={label} className="input"
-                         value={this.state.edited ? value : max} onChange={updater}/>
-          </div>
-          <div className="control"><a className="button is-static">/ {max}</a></div>
-        </div>
+      <div className="">
+        <label className="" htmlFor={label}>{label}</label>
+        <NumberInput max={max} id={label} className="input"
+                     value={this.state.edited ? value : max} onChange={onChange}/>
+        {upperLimitHint}
       </div>);
   }
 }
@@ -57,13 +54,11 @@ export class Status extends React.Component<Props, {}> {
   render() {
     return (
       <div className="status">
-        <h2 className="title is-4">状态</h2>
-
         <div className="">
           <Field label="HP" max={this.hp()}/>
           <Field label="SAN" max={this.san()}/>
           <Field label="MP" max={this.mp()}/>
-          <Field label="移动力" max={this.mov()}/>
+          <Field label="移动" max={this.mov()}/>
         </div>
       </div>
     )
@@ -99,8 +94,8 @@ export class Status extends React.Component<Props, {}> {
     const dex = this.props.attributes.get("dex");
     const str = this.props.attributes.get("str");
     const siz = this.props.attributes.get("siz");
-    const age = this.props.attributes.get("age");
-    if ([dex, str, siz, age].some((x?: number) => x === undefined)) {
+    const age = this.props.attributes.get("age", 20);
+    if ([dex, str, siz].some((x?: number) => x === undefined)) {
       return undefined;
     }
     let mov = 0;

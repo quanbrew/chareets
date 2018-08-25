@@ -8,7 +8,6 @@ interface Props {
   className?: string;
   editable: boolean;
   max: number;
-  style?: object;
 }
 
 
@@ -40,7 +39,6 @@ export class NumberInput extends React.PureComponent<Props, number> {
       <input id={id} type="number" className={this.props.className}
              disabled={!this.props.editable} value={this.value()}
              onChange={(e) => update(e.currentTarget.value)}
-             style={this.props.style}
       />);
   }
 
