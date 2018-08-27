@@ -37,7 +37,7 @@ class Field extends React.Component<FieldProps, FieldState> {
     return (
       <div className="">
         <label className="" htmlFor={label}>{label}</label>
-        <NumberInput max={max} id={label} className="input"
+        <NumberInput upper={max} id={label} className="input"
                      value={this.state.edited ? value : max} onChange={onChange}/>
         {upperLimitHint}
       </div>);

@@ -1,6 +1,9 @@
 import * as React from 'react';
 import {NumberInput} from "./fields/NumberInput";
-import {Map} from "immutable";
+import {SheetContext, SheetData} from "./Sheet";
+import {List, Map} from "immutable";
+import {div} from "./utils";
+import Select from 'react-select';
 
 interface SubSkill {
   label: string;
@@ -12,10 +15,18 @@ interface SubSkill {
 interface ISkill {
   label: string;
   en: string;
-  initial: number | null;
+  initial?: number;
   contains?: Array<SubSkill>;
   tag?: string;
 }
+
+
+const languages: Array<SubSkill> = [
+  {label: "汉语", en: "chinese"},
+  {label: "英语", en: "english"},
+  {label: "日语", en: "japanese"},
+  {label: "拉丁语", en: "latin"}
+];
 
 
 const skills: Array<ISkill> = [
@@ -82,9 +93,9 @@ const skills: Array<ISkill> = [
   {label: "急救", en: "First Aid", initial: 30},
   {label: "医学", en: "Medicine", initial: 1},
   {label: "催眠", en: "Hypnosis", initial: 1, tag: "irregular"},
-  {label: "闪避", en: "Dodge", initial: null},
+  {label: "闪避", en: "Dodge", initial: undefined},
   {
-    label: "格斗", en: "Fighting", initial: null, contains: [
+    label: "格斗", en: "Fighting", initial: undefined, contains: [
       {label: "斗殴", en: "Brawl", initial: 25},
       {label: "剑", en: "Sword", initial: 20},
       {label: "矛", en: "Spear", initial: 20},
@@ -97,7 +108,7 @@ const skills: Array<ISkill> = [
   },
   {label: "投掷", en: "Throw", initial: 20},
   {
-    label: "射击", en: "Firearms", initial: null, contains: [
+    label: "射击", en: "Firearms", initial: undefined, contains: [
       {label: "弓术", en: "Bow", initial: 15},
       {label: "手枪", en: "Handgun", initial: 20},
       {label: "步枪/霰弹枪", en: "Rifle/Shotgun", initial: 25},
@@ -124,23 +135,10 @@ const skills: Array<ISkill> = [
   {label: "潜水", en: "Diving", initial: 1, tag: "irregular"},
   {label: "炮术", en: "Artillery", initial: 1, tag: "irregular"},
   {label: "爆破", en: "Demolitions", initial: 1, tag: "irregular"},
-  {label: "语言（其他）", en: "Language (Other)", initial: 1, tag: "blank"},
-  {label: "语言（母语）", en: "Language (Own)", initial: null, tag: "blank"}
+  {label: "语言", en: "Language (Other)", initial: 1, tag: "blank", contains: languages},
+  {label: "语言（母语）", en: "Language (Own)", initial: undefined, tag: "blank", contains: languages}
 ];
 
-
-class SuperSkill extends React.Component<ISkill> {
-  render() {
-    return null;
-  }
-}
-
-
-class BlankSkill extends React.Component<ISkill> {
-  render() {
-    return null;
-  }
-}
 
 
 interface SkillData {
@@ -157,66 +155,93 @@ class CommonSkill extends React.Component<ISkill, SkillData> {
   }
 
   render() {
+    const tag = this.props.tag;
+    const is_blank = tag !== undefined && tag.includes("blank");
+    let label = null;
     if (this.props.contains !== undefined) {
-      return <SuperSkill {...this.props}/>
+      const options = this.props.contains
+        .map((item: SubSkill, index) => ({label: item.label, value: index}));
+      label = <span>{this.props.label}: <Select options={options}/></span>;
     }
-    if (this.props.tag !== undefined && this.props.tag.includes("blank")) {
-      return <BlankSkill {...this.props}/>
+    else if (is_blank) {
+      label = <span>{this.props.label}: <input/></span>;
+    }
+    else {
+      label = <span>{this.props.label}</span>;
     }
     const initial = this.props.initial;
     const occupation = this.state.occupation;
     const interest = this.state.interest;
     const grow = this.state.grow;
     let sum = 0;
-    if (typeof initial === "number") sum += initial;
+    if (initial !== undefined) sum += initial;
     if (occupation !== undefined) sum += occupation;
     if (interest !== undefined) sum += interest;
     if (grow !== undefined) sum += grow;
+
     const is_mythos = this.props.en === "Cthulhu Mythos";
-    const change = sum === initial;
-    return <tr className={change ? "skill-row changed" : "skill-row"}>
+    const is_changed = sum !== initial;
+    return <tr className={is_changed ? "skill-row changed" : "skill-row"}>
       <td>
         <input type="checkbox" disabled={is_mythos}/>
       </td>
       <td className="">
-        <span>{this.props.label}</span>
+        {label}
         <p className="help">{this.props.en}</p>
       </td>
       <td>{initial}</td>
       <td>
-        <NumberInput max={100} value={occupation} className=""
+        <NumberInput upper={100} value={occupation} className=""
                      editable={!is_mythos}
                      onChange={(n) => this.setState({occupation: n})}/>
       </td>
       <td>
-        <NumberInput max={100} value={interest} className=""
+        <NumberInput upper={100} value={interest} className=""
                      editable={!is_mythos}
                      onChange={(n) => this.setState({interest: n})}/>
       </td>
       <td>
-        <NumberInput max={100} value={grow} className=""
+        <NumberInput upper={100} value={grow} className=""
                      onChange={(n) => this.setState({grow: n})}/>
       </td>
-      <td className={sum >= 100 ? "skill-out-range" : undefined}>{sum}</td>
+      <td className={sum >= 100 ? "skill-out-range" : ""}>{sum}</td>
     </tr>;
+  }
+}
+
+
+class LanguageOwn extends React.Component<ISkill> {
+  render() {
+    const skill = (ctx: SheetData) => {
+      const edu = ctx.attributes.get("dex", 0);
+      return <CommonSkill {...this.props} initial={div(edu, 2)}/>;
+    };
+
+    return <SheetContext.Consumer>{skill}</SheetContext.Consumer>
+  }
+}
+
+
+class Dodge extends React.Component<ISkill> {
+  render() {
+    const skill = (ctx: SheetData) => (
+      <CommonSkill {...this.props} initial={ctx.attributes.get("dex", 0)}/>
+    );
+    return <SheetContext.Consumer>{skill}</SheetContext.Consumer>
   }
 }
 
 
 class Skill extends React.Component<ISkill> {
   render() {
-    const tag = this.props.tag;
-    const is_blank = tag !== undefined && tag.includes("blank");
-    const has_contains = this.props.contains !== undefined && this.props.contains.length > 0;
-    if (is_blank && has_contains) {
-      return <BlankSkill {...this.props}/>
+    const map: { [key: string]: (props: ISkill) => JSX.Element } = {
+      "Dodge": (p) => <Dodge {...p}/>,
+      "Language (Own)": (p) => <LanguageOwn {...p}/>
+    };
+    if (map.hasOwnProperty(this.props.en)) {
+      return map[this.props.en](this.props);
     }
-    else if (is_blank) {
-      return <SuperSkill {...this.props}/>
-    }
-    else if (has_contains) {
-      return null;
-    }
+
     return <CommonSkill {...this.props} />
   }
 }
@@ -229,39 +254,44 @@ interface Props {
 
 interface State {
   filter: string;
+  custom_skills: List<ISkill>;
 }
 
 
 export class Skills extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = {filter: ""}
+    this.state = {filter: "", custom_skills: List()}
   }
+
+  // add_skill = (skill: ISkill) =>
 
   render() {
     const filter = this.state.filter;
-    const rows = skills
+    const rows = skills.concat(this.state.custom_skills.toArray())
+      .sort((a, b) => a.en.localeCompare(b.en))
       .filter((row) => row.en.toLowerCase().includes(filter) || row.label.includes(filter))
-      .map((row) => <Skill key={row.en} {...row}/>);
-    const skill_filter = <div className="">
+      .map((row, i) => <Skill key={i} {...row}/>);
+    const skill_filter = (<div className="">
       <label className="" htmlFor="skill-filter">筛选</label>
       <input id="skill-filter" className="" value={filter} placeholder="筛选技能名"
              onChange={(e) => this.setState({filter: e.currentTarget.value})}/>
-    </div>;
+    </div>);
+    const table_header = (<tr>
+      <th/>
+      <th>名称</th>
+      <th>初始值</th>
+      <th>本职</th>
+      <th>兴趣</th>
+      <th>成长</th>
+      <th>合计</th>
+    </tr>);
     return (
       <div className="">
         {skill_filter}
         <table className="">
           <tbody>
-          <tr>
-            <th/>
-            <th>名称</th>
-            <th>初始值</th>
-            <th>本职</th>
-            <th>兴趣</th>
-            <th>成长</th>
-            <th>合计</th>
-          </tr>
+          {table_header}
           {rows}
           </tbody>
         </table>

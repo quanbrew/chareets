@@ -8,7 +8,6 @@ import Characteristics from './Characteristics';
 import {Status} from './Status';
 import {Skills} from "./Skills";
 
-
 export class SheetData {
   attributes: Map<string, number>;
   information: Map<string, string>;
@@ -35,7 +34,7 @@ class Sheet extends React.Component<{}, SheetData> {
 
   public render() {
     return (
-      <React.StrictMode><SheetContext.Provider value={this.state}>
+      <SheetContext.Provider value={this.state}>
         <div className="Sheet">
           <header className="">
             <img src={logo} className="" alt="logo"/>
@@ -49,7 +48,7 @@ class Sheet extends React.Component<{}, SheetData> {
           <Status attributes={this.state.attributes}/>
           <Skills attributes={this.state.attributes}/>
         </div>
-      </SheetContext.Provider></React.StrictMode>
+      </SheetContext.Provider>
     );
   }
 }

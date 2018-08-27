@@ -7,14 +7,14 @@ interface Props {
   onChange?: (x: number) => void;
   className?: string;
   editable: boolean;
-  max: number;
+  upper: number;
 }
 
 
 export class NumberInput extends React.PureComponent<Props, number> {
   public static defaultProps: Partial<Props> = {
     editable: true,
-    max: 1e21 - 1,
+    upper: 1e21 - 1,
   };
 
   render() {
@@ -26,7 +26,7 @@ export class NumberInput extends React.PureComponent<Props, number> {
           this.props.editable &&
           this.props.onChange !== undefined &&
           !isNaN(number) &&
-          number <= this.props.max
+          number <= this.props.upper
         ) {
           this.props.onChange(Number(v));
         }
