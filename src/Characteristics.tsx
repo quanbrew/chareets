@@ -1,4 +1,6 @@
 import * as React from 'react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faDice} from "@fortawesome/free-solid-svg-icons";
 import NumberInput from './fields/NumberInput';
 import {Map} from "immutable";
 import {randomIntFromInterval, roll} from "./utils";
@@ -82,7 +84,7 @@ class AgeField extends React.PureComponent<FieldProps> {
         <NumberInput value={this.props.value} id={this.props.name}
                      onChange={this.props.set}
                      className=""/>
-        <button className="" onClick={() => this.props.set(this.auto_age())}>随机年龄</button>
+        <button className="" onClick={() => this.props.set(this.auto_age())}><FontAwesomeIcon icon={faDice}/></button>
         <p className="help">{hint}</p>
       </div>
     )
@@ -128,7 +130,7 @@ class Characteristics extends React.Component<Props, {}> {
     return (
       <div className="">
         <AgeField label="年龄" max={99} {...name("age")}/>
-        <button className="" onClick={this.auto_roll}>自动 roll 点</button>
+        <button className="" onClick={this.auto_roll}><FontAwesomeIcon icon={faDice}/>属性</button>
         <Field label="力量" max={99} {...name("str")}/>
         <Field label="体质" max={99} {...name("con")}/>
         <Field label="体型"          {...name("siz")}/>
