@@ -51,18 +51,20 @@ interface Props {
 
 
 export class Status extends React.Component<Props, {}> {
-  render() {
-    return (
-      <div className="status">
-        <div className="">
-          <Field label="HP" max={this.hp()}/>
-          <Field label="SAN" max={this.san()}/>
-          <Field label="MP" max={this.mp()}/>
-          <Field label="移动" max={this.mov()}/>
-        </div>
-      </div>
-    )
-  }
+  private db_and_build_table: Array<[number, string | null, number | null]> = [
+    [1, null, null],
+    // STR+SIZ DB BUILD
+    [64, "-2", -2],
+    [84, "-1", -1],
+    [124, "0", 0],
+    [164, "+1d4", 1],
+    [204, "+1d6", 2],
+    [284, "+2d6", 3],
+    [364, "+3d6", 4],
+    [444, "+4d6", 5],
+    [524, "+5d6", 6],
+    [Number.POSITIVE_INFINITY, null, null]
+  ];
 
   private san(): number | undefined {
     return this.props.attributes.get("pow");
@@ -87,6 +89,35 @@ export class Status extends React.Component<Props, {}> {
     else {
       return undefined;
     }
+  }
+
+  render() {
+    const [db, build] = this.db_and_build();
+    const db_field = db === null ? null : <p>伤害加深（DB）：{db}</p>;
+    const build_field = build === null ? null : <p>体格：{build}</p>;
+    return (
+      <div className="status">
+        <div className="">
+          <Field label="HP" max={this.hp()}/>
+          <Field label="SAN" max={this.san()}/>
+          <Field label="MP" max={this.mp()}/>
+          <Field label="移动" max={this.mov()}/>
+          {db_field}{build_field}
+        </div>
+      </div>
+    )
+  }
+
+  private db_and_build(): [string | null, number | null] {
+    const str = this.props.attributes.get("str", 0);
+    const siz = this.props.attributes.get("siz", 0);
+    const v = str + siz;
+    for (let [m, db, build] of this.db_and_build_table) {
+      if (v <= m) {
+        return [db, build];
+      }
+    }
+    return [null, null];
   }
 
   private mov(): number | undefined {
