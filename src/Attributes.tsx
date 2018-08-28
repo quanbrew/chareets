@@ -30,7 +30,7 @@ class Field extends React.PureComponent<FieldProps> {
     }
     return (
       <div className="">
-        <label className="" htmlFor={id}>{label}</label>
+        <label className="" htmlFor={id}>{label}<span>{id.toLocaleUpperCase()}</span></label>
         <NumberInput value={value} onChange={set} id={id}
                      className="number-field characteristics-field"/>
         {this.props.children}
@@ -101,11 +101,13 @@ interface Props {
 }
 
 
-class Attributes extends React.Component<Props, {}> {
-  shouldComponentUpdate(next: Props) {
-    return !this.props.attributes.equals(next.attributes)
-  }
+interface AttributesState {
+  rollAttr: number;
+  eduEnhance: number;
+}
 
+
+class Attributes extends React.Component<Props, AttributesState> {
   autoRoll = () => {
     const r = (n: number, face: number): number =>
       roll(n, face).reduce((x, y) => x + y);
@@ -121,19 +123,56 @@ class Attributes extends React.Component<Props, {}> {
       edu: 5 * (r(2, 6) + 6),
       luck: 5 * r(3, 6),
     });
+    this.setState((prev: AttributesState) => ({rollAttr: prev.rollAttr + 1}));
     this.props.set(next);
   };
+  eduEnhance = () => {
+    let edu = this.props.attributes.get("edu");
+    if (edu === undefined) return;
+    this.setState((prev: AttributesState) => ({eduEnhance: prev.eduEnhance + 1}));
+    const a = roll(1, 100)[0];
+    if (a > edu) {
+      edu += roll(1, 10)[0];
+      if (edu > 99) {
+        edu = 99
+      }
+      this.props.set(this.props.attributes.set("edu", edu));
+    }
+  };
+
+  constructor(props: Props) {
+    super(props);
+    this.state = {rollAttr: 0, eduEnhance: 0}
+  }
+
+  sum() {
+    const sumValue = ["str", "con", "siz", "dex", "app", "int", "pow", "edu"]
+      .map((key: string) => this.props.attributes.get(key, 0))
+      .reduce((a, b) => a + b);
+    return <p>所有属性之和为{sumValue}</p>;
+  }
 
   public render() {
     const name = (k: string) => ({
-        name: k,
-        value: this.props.attributes.get(k),
-        set: (v: number) => this.props.set(this.props.attributes.set(k, v))
+      name: k,
+      value: this.props.attributes.get(k),
+      set: (v: number) => this.props.set(this.props.attributes.set(k, v))
     });
+    const rollAttrTimes = this.state.rollAttr;
+    const autoRoll = (<div>
+      <button className="" onClick={this.autoRoll}>
+        <FontAwesomeIcon icon={faDice}/>属性
+      </button>
+      {rollAttrTimes > 1 ? <span>已roll {rollAttrTimes} 次</span> : null}
+    </div>);
+    const eduEnhance = (<div>
+      <button onClick={this.eduEnhance}><FontAwesomeIcon icon={faGraduationCap}/>增强检定</button>
+      {this.state.eduEnhance > 0 ? <span>已增强{this.state.eduEnhance}次</span> : null}
+    </div>);
     return (
       <div className="">
         <AgeField label="年龄" {...name("age")} upper={99}/>
-        <button className="" onClick={this.autoRoll}><FontAwesomeIcon icon={faDice}/>属性</button>
+        {autoRoll}
         <Field label="力量" {...name("str")} upper={99}/>
         <Field label="体质" {...name("con")} upper={99}/>
         <Field label="体型" {...name("siz")}/>
@@ -141,9 +180,8 @@ class Attributes extends React.Component<Props, {}> {
         <Field label="外貌" {...name("app")} upper={99}/>
         <Field label="智力" {...name("int")} upper={99}/>
         <Field label="意志" {...name("pow")}/>
-        <Field label="教育" {...name("edu")} upper={99}>
-          <button><FontAwesomeIcon icon={faGraduationCap}/>增强检定</button>
-        </Field>
+        <Field label="教育" {...name("edu")} upper={99}>{eduEnhance}</Field>
+        {this.sum()}
         <Field label="幸运" {...name("luck")} upper={99}/>
         <Status attributes={this.props.attributes}/>
       </div>
