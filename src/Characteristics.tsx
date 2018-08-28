@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faDice} from "@fortawesome/free-solid-svg-icons";
+import {faDice, faGraduationCap} from "@fortawesome/free-solid-svg-icons";
 import NumberInput from './fields/NumberInput';
 import {Map} from "immutable";
 import {randomIntFromInterval, roll} from "./utils";
@@ -9,9 +9,10 @@ import {randomIntFromInterval, roll} from "./utils";
 interface FieldProps {
   label: string;
   name: string;
-  max?: number;
+  upper?: number;
   value?: number;
   set: (v: number) => void;
+  hint?: JSX.Element;
 }
 
 
@@ -21,16 +22,17 @@ class Field extends React.PureComponent<FieldProps> {
     const value = this.props.value;
     const id = this.props.name;
     const set = this.props.set;
-    const max = this.props.max;
-    let hint = this.props.children;
-    if (hint === undefined && max !== undefined && value !== undefined && value > max) {
-      hint = <span>{label}最多{max}</span>;
+    const upper = this.props.upper;
+    let hint = this.props.hint;
+    if (hint === undefined && upper !== undefined && value !== undefined && value > upper) {
+      hint = <span>{label}最多{upper}</span>;
     }
     return (
       <div className="">
         <label className="" htmlFor={id}>{label}</label>
         <NumberInput value={value} onChange={set} id={id}
                      className="number-field characteristics-field"/>
+        {this.props.children}
         <p className="help">{hint}</p>
       </div>)
   }
@@ -129,17 +131,19 @@ class Characteristics extends React.Component<Props, {}> {
     });
     return (
       <div className="">
-        <AgeField label="年龄" max={99} {...name("age")}/>
+        <AgeField label="年龄" upper={99} {...name("age")}/>
         <button className="" onClick={this.auto_roll}><FontAwesomeIcon icon={faDice}/>属性</button>
-        <Field label="力量" max={99} {...name("str")}/>
-        <Field label="体质" max={99} {...name("con")}/>
+        <Field label="力量" upper={99} {...name("str")}/>
+        <Field label="体质" upper={99} {...name("con")}/>
         <Field label="体型"          {...name("siz")}/>
-        <Field label="敏捷" max={99} {...name("dex")}/>
-        <Field label="外貌" max={99} {...name("app")}/>
-        <Field label="智力" max={99} {...name("int")}/>
+        <Field label="敏捷" upper={99} {...name("dex")}/>
+        <Field label="外貌" upper={99} {...name("app")}/>
+        <Field label="智力" upper={99} {...name("int")}/>
         <Field label="意志"          {...name("pow")}/>
-        <Field label="教育" max={99} {...name("edu")}/>
-        <Field label="幸运" max={99} {...name("luck")}/>
+        <Field label="教育" upper={99} {...name("edu")}>
+          <button><FontAwesomeIcon icon={faGraduationCap}/>增强检定</button>
+        </Field>
+        <Field label="幸运" upper={99} {...name("luck")}/>
       </div>
     )
   }
