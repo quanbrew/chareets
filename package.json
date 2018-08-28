@@ -16,7 +16,7 @@
   },
   "scripts": {
     "start": "parcel src/index.html",
-    "build": "parcel build src/index.html"
+    "build": "NODE_ENV=production parcel build src/index.html"
   },
   "devDependencies": {
     "@types/jest": "^23.3.1",

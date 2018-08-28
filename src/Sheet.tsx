@@ -4,8 +4,7 @@ import './Sheet.sass';
 
 import logo from './logo.svg';
 import Information from './Information';
-import Characteristics from './Characteristics';
-import {Status} from './Status';
+import Attributes from './Attributes';
 import {Skills} from "./Skills";
 
 export class SheetData {
@@ -44,8 +43,7 @@ class Sheet extends React.Component<{}, SheetData> {
           </header>
 
           <Information information={this.state.information} set={this.setInformation}/>
-          <Characteristics attributes={this.state.attributes} set={this.setAttributes}/>
-          <Status attributes={this.state.attributes}/>
+          <Attributes attributes={this.state.attributes} set={this.setAttributes}/>
           <Skills attributes={this.state.attributes}/>
         </div>
       </SheetContext.Provider>

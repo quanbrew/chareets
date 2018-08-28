@@ -134,6 +134,3 @@ export const skills: Array<Skill> = [
   {label: "语言", en: "Language (Other)", initial: 1, tag: "blank", contains: languages},
   {label: "语言（母语）", en: "Language (Own)", initial: undefined, tag: "blank", contains: languages}
 ];
-
-
-export default skills;

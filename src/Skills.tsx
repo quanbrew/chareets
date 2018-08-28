@@ -44,10 +44,10 @@ class SkillItem extends React.Component<Skill & ItemProps, ItemState> {
         const choices = contains.map((x, i) => ({label: x.label, value: i}));
         select = <Select options={choices}/>
       }
-      return <p>
+      return <div>
         <input onChange={(e) => this.setSkill({label: e.currentTarget.value})} value={this.state.skill.label}/>
         {select}{cancelButton}{editButton}{addButton}
-      </p>
+      </div>
     }
     else {
       return <p onClick={this.startEdit}>{this.props.label}</p>;

@@ -2,25 +2,26 @@ import * as React from 'react';
 import {Map} from "immutable";
 import {div} from "./utils";
 import NumberInput from "./fields/NumberInput";
+import Select from "react-select";
 
 
-interface FieldProps {
+interface ItemProps {
   label: string;
-  max?: number;
+  upper?: number;
 }
 
 
-interface FieldState {
+interface ItemState {
   value?: number;
   edited: boolean;
 }
 
 
-class Field extends React.Component<FieldProps, FieldState> {
-  constructor(props: FieldProps) {
+class StatusItem extends React.Component<ItemProps, ItemState> {
+  constructor(props: ItemProps) {
     super(props);
-    if (props.max !== undefined) {
-      this.state = {value: props.max, edited: false};
+    if (props.upper !== undefined) {
+      this.state = {value: props.upper, edited: false};
     }
     else {
       this.state = {edited: false};
@@ -28,21 +29,44 @@ class Field extends React.Component<FieldProps, FieldState> {
   }
 
   render() {
-    const max = this.props.max;
+    const upper = this.props.upper;
     const value = this.state.value;
     const label = this.props.label;
     const onChange = (v: number) => this.setState({value: v, edited: true});
-    const upperLimitHint = <span className=""> / {max === undefined ? "?" : max}</span>;
+    const upperLimitHint = <span className=""> / {upper === undefined ? "?" : upper}</span>;
 
     return (
       <div className="">
         <label className="" htmlFor={label}>{label}</label>
-        <NumberInput upper={max} id={label} className="input"
-                     value={this.state.edited ? value : max} onChange={onChange}/>
+        <NumberInput upper={upper} id={label} className="input"
+                     value={this.state.edited ? value : upper} onChange={onChange}/>
         {upperLimitHint}
       </div>);
   }
 }
+
+
+class StatusSelect extends React.Component {
+  private status = {
+    physical_normal: "身体正常",
+    psychological_normal: "心理正常",
+    insanity_indefinite: "不定时疯狂",
+    insanity_permanent: "永久疯狂",
+    insanity_temporary: "临时疯狂",
+    major_wound: "重伤",
+    dying: "濒死",
+    dead: "死亡"
+  };
+
+  render() {
+    const statusOptions = [];
+    for (let key in this.status) {
+      statusOptions.push({value: key, label: this.status[key]})
+    }
+    return <Select isMulti options={statusOptions}/>
+  }
+}
+
 
 
 interface Props {
@@ -91,18 +115,20 @@ export class Status extends React.Component<Props, {}> {
     }
   }
 
+
   render() {
     const [db, build] = this.db_and_build();
+    const mov = this.mov();
     const db_field = db === null ? null : <p>伤害加深（DB）：{db}</p>;
-    const build_field = build === null ? null : <p>体格：{build}</p>;
+    const build_field = build === null ? null : <p>体格（Build）：{build}</p>;
+    const mov_field = mov === null ? null : <p>移动力（MOV）：{mov}</p>;
     return (
       <div className="status">
         <div className="">
-          <Field label="HP" max={this.hp()}/>
-          <Field label="SAN" max={this.san()}/>
-          <Field label="MP" max={this.mp()}/>
-          <Field label="移动" max={this.mov()}/>
-          {db_field}{build_field}
+          <StatusItem label="HP" upper={this.hp()}/>
+          <StatusItem label="SAN" upper={this.san()}/>
+          <StatusItem label="MP" upper={this.mp()}/>
+          {db_field}{build_field}{mov_field}<StatusSelect/>
         </div>
       </div>
     )
@@ -120,40 +146,24 @@ export class Status extends React.Component<Props, {}> {
     return [null, null];
   }
 
-  private mov(): number | undefined {
+  private mov(): number | null {
 
     const dex = this.props.attributes.get("dex");
     const str = this.props.attributes.get("str");
     const siz = this.props.attributes.get("siz");
     const age = this.props.attributes.get("age", 20);
     if ([dex, str, siz].some((x?: number) => x === undefined)) {
-      return undefined;
+      return null;
     }
     let mov = 0;
-    if (dex < siz && str < siz) {
-      mov = 7
-    }
-    if (dex >= siz || str >= siz) {
-      mov = 8
-    }
-    if (dex > siz && str > siz) {
-      mov = 9
-    }
-    if (age >= 80) {
-      mov -= 5
-    }
-    else if (age >= 70) {
-      mov -= 4
-    }
-    else if (age >= 60) {
-      mov -= 3
-    }
-    else if (age >= 50) {
-      mov -= 2
-    }
-    else if (age >= 40) {
-      mov -= 1
-    }
+    if (dex < siz && str < siz) mov = 7;
+    if (dex >= siz || str >= siz) mov = 8;
+    if (dex > siz && str > siz) mov = 9;
+    if (age >= 80) mov -= 5;
+    else if (age >= 70) mov -= 4;
+    else if (age >= 60) mov -= 3;
+    else if (age >= 50) mov -= 2;
+    else if (age >= 40) mov -= 1;
     return mov;
   }
 }
