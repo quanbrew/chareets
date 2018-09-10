@@ -6,7 +6,7 @@ import {faPlusSquare, faSave, faTimesCircle} from "@fortawesome/free-solid-svg-i
 import NumberInput from "./fields/NumberInput";
 
 
-interface Props {
+export interface Props {
   editing: boolean;
   startEdit: () => void;
   submitEdit: (skill: Skill) => void;
@@ -17,56 +17,95 @@ interface Props {
 
 interface State {
   skill: Skill;
-  selected: number;
+  selected: number | "other";
+  mark: boolean;
 }
 
 
 export class SkillItem extends React.Component<Skill & Props, State> {
-  editSkill = (skill: Partial<Skill>) =>
-    this.setState({skill: {...this.state.skill, ...skill}});
-  startEdit = () => this.setState({skill: this.props}, this.props.startEdit);
   private skillPointInputs = () => {
+    const isCthulhuMythos = this.props.name === "Cthulhu Mythos";
+    const isCreditRating = this.props.name === "Credit Rating";
+    const disableInitial = this.state.selected !== "other";
+    const disableOccupation = isCthulhuMythos;
+    const disableInterest = isCthulhuMythos;
+    const disableGrowth = false;
+
     const initial = (<div>
-      <label>初始</label>
+      <label htmlFor="skill-nitial">初始</label>
       <NumberInput
+        id="skill-initial"
         value={this.initial()}
+        editable={!disableInitial}
         onChange={x => this.editSkill({initial: x})}
       />
     </div>);
     const occupation = (<div>
-      <label>职业</label>
+      <label htmlFor="skill-occupation">职业</label>
       <NumberInput
+        id="skill-occupation"
         value={this.state.skill.occupation}
+        editable={!disableOccupation}
         onChange={x => this.editSkill({occupation: x})}
       />
     </div>);
     const interest = (<div>
-      <label>兴趣</label>
+      <label htmlFor="skill-interest">兴趣</label>
       <NumberInput
+        id="skill-interest"
         value={this.state.skill.interest}
+        editable={!disableInterest}
         onChange={x => this.editSkill({interest: x})}
       />
     </div>);
     const growth = (<div>
-      <label>成长</label>
+      <label htmlFor="skill-growth">成长</label>
       <NumberInput
+        id="skill-growth"
         value={this.state.skill.growth}
+        editable={!disableGrowth}
         onChange={x => this.editSkill({growth: x})}
       />
+      {isCthulhuMythos || isCreditRating ? null : (
+        <div>
+          <label htmlFor="skill-growth-mark">标记</label>
+          <input id="skill-growth-mark" checked={this.state.mark} onChange={(e) => {
+            // console.log(e.currentTarget.checked);
+            this.setState({mark: e.currentTarget.checked});
+          }} type="checkbox"/>
+        </div>
+      )}
+
     </div>);
     return (<div>{initial}{occupation}{interest}{growth}</div>)
   };
+
+  editSkill = (skill: Partial<Skill>) =>
+    this.setState({skill: {...this.state.skill, ...skill}});
+
+  startEdit = () => this.setState({skill: this.props}, this.props.startEdit);
   private select = () => {
     let select = null;
     // Is this skill contains many variant.
     const contains = this.props.contains;
     if (contains !== undefined) {
       const options = contains.map((x, i) => (<option key={i} value={i}>{x.label}</option>));
-      const updateSelect = (e: SyntheticEvent<HTMLSelectElement>) =>
-        this.setState({selected: Number(e.currentTarget.value)});
-      select = <select onChange={updateSelect}>{options}
-        <option value={-1}>其他...</option>
-      </select>
+      const updateSelect = (e: SyntheticEvent<HTMLSelectElement>) => {
+        const selected: string = e.currentTarget.value;
+        if (selected === "other") {
+          this.setState({selected: selected});
+        }
+        else {
+          const i = Number(selected);
+          this.setState({selected: i});
+          this.editSkill({initial: contains[i].initial})
+        }
+      };
+      select = (
+        <select value={this.state.selected} onChange={updateSelect}>
+          {options}
+          <option value="other">其他...</option>
+        </select>);
     }
     return select;
   };
@@ -86,40 +125,12 @@ export class SkillItem extends React.Component<Skill & Props, State> {
         <FontAwesomeIcon icon={faTimesCircle}/>
       </button>);
 
-    return <div>{cancelButton}{editButton}{addButton}</div>;
+    return <div>{editButton}{addButton}{cancelButton}</div>;
   };
 
   constructor(props: Skill & Props) {
     super(props);
-    this.state = {skill: this.props, selected: 0};
-  }
-
-  render() {
-    if (this.props.editing) {
-      return this.editing();
-    }
-    else {
-      return <div onClick={this.startEdit}>
-        <div>{this.props.label}</div>
-        {this.props.name ? <div>{this.props.name}</div> : null}
-        <div>{this.total()}</div>
-      </div>;
-    }
-  }
-
-  private initial(): number | undefined {
-    const v = this.state.skill.initial;
-    if (v !== undefined) {
-      return v;
-    }
-    else if (this.state.skill.contains !== undefined) {
-      const selected = this.state.selected;
-      if (selected === -1) return undefined;
-      return this.state.skill.contains[selected].initial;
-    }
-    else {
-      return undefined
-    }
+    this.state = {skill: this.props, selected: 0, mark: false};
   }
 
   private total(): number {
@@ -135,6 +146,20 @@ export class SkillItem extends React.Component<Skill & Props, State> {
     return total;
   }
 
+  render() {
+    if (this.props.editing) {
+      return this.editing();
+    }
+    else {
+      const subSkill = this.subSkill();
+      return <div onClick={this.startEdit}>
+        <div>{this.props.label}{subSkill !== null ? ": " + subSkill.label : null}</div>
+        {this.props.name ? <div>{this.props.name}</div> : null}
+        <div>{this.total()}</div>
+      </div>;
+    }
+  }
+
   private editing() {
     return (<div>
       <input
@@ -147,4 +172,40 @@ export class SkillItem extends React.Component<Skill & Props, State> {
       {this.buttons()}
     </div>);
   }
+
+  private initial(): number | undefined {
+    const initial = this.state.skill.initial;
+    if (initial !== undefined) {
+      return initial;
+    }
+    else if (this.state.skill.contains !== undefined) {
+      const selected = this.state.selected;
+      if (selected === "other") return 0;
+      return this.state.skill.contains[selected].initial;
+    }
+    else {
+      return this.props.initial;
+    }
+  }
+
+  private subSkill() {
+    const contains = this.props.contains;
+    const selected = this.state.selected;
+    if (contains === undefined) {
+      return null
+    }
+    else if (selected === "other") {
+      return null
+    }
+    else {
+      return contains[selected];
+    }
+  }
 }
+
+
+// export class Dodge extends React.Component<Skill & Props, State> {
+//   render() {
+//     return null;
+//   }
+// }

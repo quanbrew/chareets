@@ -1,10 +1,12 @@
 import * as React from 'react';
-import {List, Map} from "immutable";
+import {List} from "immutable";
 import {Skill, skills} from "./skillData";
-import {SkillItem} from "./SkillItem";
+import {Props as SkillItemProps, SkillItem} from "./SkillItem";
+import {Attributes} from "./Sheet";
+import {div} from "./utils";
 
 interface Props {
-  attributes: Map<string, number>;
+  attributes: Attributes;
 }
 
 
@@ -18,6 +20,7 @@ interface State {
 export class SkillTable extends React.Component<Props, State> {
   addSkill = (skill: Skill) => {
     if (skill.label !== "") {
+      skill.name = "";
       this.setState({skills: this.state.skills.push(skill), editing: null});
     }
   };
@@ -54,19 +57,33 @@ export class SkillTable extends React.Component<Props, State> {
     this.state = {filter: "", skills: List(skills), editing: null};
   }
 
+  dispatch(skill: Skill, index: number) {
+    const name = skill.name;
+    const props: SkillItemProps = {
+      editing: this.state.editing === index,
+      startEdit: this.startEditSkill(index),
+      addSkill: this.addSkill,
+      cancelEdit: this.cancelEdit,
+      submitEdit: this.editSkill(index)
+    };
+    if (name === "Dodge") {
+      const dex = this.props.attributes.get("dex");
+      if (dex !== undefined) skill.initial = div(dex, 2);
+    }
+    else if (name === "Language (Own)") {
+      skill.initial = this.props.attributes.get("edu");
+    }
+    return <SkillItem
+      {...skill}
+      key={index}
+      {...props}
+    />;
+  }
+
   render() {
     const skillList = this.state.skills
       .filter(this.isSkillMatch).toArray()
-      .map((skill: Skill, index: number) => (
-        <SkillItem
-          {...skill}
-          key={index}
-          editing={this.state.editing === index}
-          startEdit={this.startEditSkill(index)}
-          addSkill={this.addSkill}
-          cancelEdit={this.cancelEdit}
-          submitEdit={this.editSkill(index)}
-        />))
+      .map((skill: Skill, index: number) => this.dispatch(skill, index))
       .sort((a, b) => {
         const m = a.props.name.concat(a.props.label);
         const n = b.props.name.concat(b.props.label);

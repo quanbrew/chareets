@@ -7,6 +7,9 @@ import Information from './Information';
 import Attributes from './Attributes';
 import {SkillTable} from "./SkillTable";
 
+export type Attributes = Map<string, number>;
+
+
 export class SheetData {
   attributes: Map<string, number>;
   information: Map<string, string>;
