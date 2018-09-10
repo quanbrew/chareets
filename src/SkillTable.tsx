@@ -20,7 +20,7 @@ interface State {
 export class SkillTable extends React.Component<Props, State> {
   addSkill = (skill: Skill) => {
     if (skill.label !== "") {
-      skill.name = "";
+      // skill.name = "";
       this.setState({skills: this.state.skills.push(skill), editing: null});
     }
   };

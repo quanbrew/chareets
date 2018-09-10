@@ -32,7 +32,7 @@ export class SkillItem extends React.Component<Skill & Props, State> {
     const disableGrowth = false;
 
     const initial = (<div>
-      <label htmlFor="skill-nitial">初始</label>
+      <label htmlFor="skill-initial">初始</label>
       <NumberInput
         id="skill-initial"
         value={this.initial()}
