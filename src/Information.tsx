@@ -21,6 +21,7 @@ class Field extends React.PureComponent<FieldProps, {}> {
           onChange={(e) => this.props.set(e.currentTarget.value)}
           className=""
         />
+
       </div>
     )
   }

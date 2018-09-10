@@ -74,7 +74,43 @@ interface Props {
 }
 
 
-export class Status extends React.Component<Props, {}> {
+class StatusState {
+  armor: number;
+}
+
+
+export class Status extends React.Component<Props, StatusState> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {armor: 0};
+  }
+
+
+  render() {
+    const [db, build] = this.db_and_build();
+    const mov = this.mov();
+    const db_field = db === null ? null : <p>伤害加深（DB）：{db}</p>;
+    const build_field = build === null ? null : <p>体格（Build）：{build}</p>;
+    const mov_field = mov === null ? null : <p>移动力（MOV）：{mov}</p>;
+    return (
+      <div className="status">
+        <div className="">
+          <StatusItem label="HP" upper={this.hp()}/>
+          <StatusItem label="SAN" upper={this.san()}/>
+          <StatusItem label="MP" upper={this.mp()}/>
+          {db_field}{build_field}{mov_field}
+          <div>
+            <label htmlFor="armor">护甲</label>
+            <NumberInput id="armor" value={this.state.armor}
+                         onChange={n => this.setState({armor: n})}
+            />
+          </div>
+          <StatusSelect/>
+        </div>
+      </div>
+    )
+  }
+
   private db_and_build_table: Array<[number, string | null, number | null]> = [
     [1, null, null],
     // STR+SIZ DB BUILD
@@ -115,24 +151,6 @@ export class Status extends React.Component<Props, {}> {
     }
   }
 
-
-  render() {
-    const [db, build] = this.db_and_build();
-    const mov = this.mov();
-    const db_field = db === null ? null : <p>伤害加深（DB）：{db}</p>;
-    const build_field = build === null ? null : <p>体格（Build）：{build}</p>;
-    const mov_field = mov === null ? null : <p>移动力（MOV）：{mov}</p>;
-    return (
-      <div className="status">
-        <div className="">
-          <StatusItem label="HP" upper={this.hp()}/>
-          <StatusItem label="SAN" upper={this.san()}/>
-          <StatusItem label="MP" upper={this.mp()}/>
-          {db_field}{build_field}{mov_field}<StatusSelect/>
-        </div>
-      </div>
-    )
-  }
 
   private db_and_build(): [string | null, number | null] {
     const str = this.props.attributes.get("str", 0);

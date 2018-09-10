@@ -87,7 +87,9 @@ class AgeField extends React.PureComponent<FieldProps> {
         <NumberInput value={this.props.value} id={this.props.name}
                      onChange={this.props.set}
                      className=""/>
-        <button className="" onClick={() => this.props.set(this.autoAge())}><FontAwesomeIcon icon={faDice}/></button>
+        <button className="" onClick={() => this.props.set(this.autoAge())}>
+          <FontAwesomeIcon icon={faDice}/>
+        </button>
         <p className="help">{hint}</p>
       </div>
     )
@@ -149,7 +151,7 @@ class Attributes extends React.Component<Props, AttributesState> {
     const sumValue = ["str", "con", "siz", "dex", "app", "int", "pow", "edu"]
       .map((key: string) => this.props.attributes.get(key, 0))
       .reduce((a, b) => a + b);
-    return <p>所有属性之和为{sumValue}</p>;
+    return <div>所有属性之和为{sumValue}</div>;
   }
 
   public render() {
