@@ -2,8 +2,9 @@ import {Skill} from "./skillData";
 import * as React from "react";
 import {SyntheticEvent} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPlusSquare, faSave, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
+import {faDesktop, faPlusSquare, faSave, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
 import NumberInput from "./fields/NumberInput";
+import {faPagelines} from "@fortawesome/free-brands-svg-icons";
 
 
 export interface Props {
@@ -12,6 +13,7 @@ export interface Props {
   submitEdit: (skill: Skill) => void;
   addSkill: (skill: Skill) => void;
   cancelEdit: () => void;
+  skill: Skill;
 }
 
 
@@ -22,10 +24,14 @@ interface State {
 }
 
 
-export class SkillItem extends React.Component<Skill & Props, State> {
+export class SkillItem extends React.Component<Props, State> {
+  startEdit = () => this.setState({skill: this.props.skill}, this.props.startEdit);
+
+  editSkill = (skill: Partial<Skill>) =>
+    this.setState({skill: {...this.state.skill, ...skill}});
   private skillPointInputs = () => {
-    const isCthulhuMythos = this.props.name === "Cthulhu Mythos";
-    const isCreditRating = this.props.name === "Credit Rating";
+    const isCthulhuMythos = this.props.skill.name === "Cthulhu Mythos";
+    const isCreditRating = this.props.skill.name === "Credit Rating";
     const disableInitial = this.state.selected !== "other";
     const disableOccupation = isCthulhuMythos;
     const disableInterest = isCthulhuMythos;
@@ -70,7 +76,6 @@ export class SkillItem extends React.Component<Skill & Props, State> {
         <div>
           <label htmlFor="skill-growth-mark">标记</label>
           <input id="skill-growth-mark" checked={this.state.mark} onChange={(e) => {
-            // console.log(e.currentTarget.checked);
             this.setState({mark: e.currentTarget.checked});
           }} type="checkbox"/>
         </div>
@@ -79,15 +84,10 @@ export class SkillItem extends React.Component<Skill & Props, State> {
     </div>);
     return (<div>{initial}{occupation}{interest}{growth}</div>)
   };
-
-  editSkill = (skill: Partial<Skill>) =>
-    this.setState({skill: {...this.state.skill, ...skill}});
-
-  startEdit = () => this.setState({skill: this.props}, this.props.startEdit);
   private select = () => {
     let select = null;
     // Is this skill contains many variant.
-    const contains = this.props.contains;
+    const contains = this.props.skill.contains;
     if (contains !== undefined) {
       const options = contains.map((x, i) => (<option key={i} value={i}>{x.label}</option>));
       const updateSelect = (e: SyntheticEvent<HTMLSelectElement>) => {
@@ -112,32 +112,59 @@ export class SkillItem extends React.Component<Skill & Props, State> {
   private buttons = () => {
     const editButton = (
       <button onClick={() => this.props.submitEdit(this.state.skill)}>
-        <FontAwesomeIcon icon={faSave}/>
+        <FontAwesomeIcon icon={faSave}/> 保存
       </button>);
 
     const addButton = (
       <button onClick={() => this.props.addSkill(this.state.skill)}>
-        <FontAwesomeIcon icon={faPlusSquare}/>
+        <FontAwesomeIcon icon={faPlusSquare}/> 新增
       </button>);
 
     const cancelButton = (
       <button onClick={this.props.cancelEdit}>
-        <FontAwesomeIcon icon={faTimesCircle}/>
+        <FontAwesomeIcon icon={faTimesCircle}/> 取消
       </button>);
 
-    return <div>{editButton}{addButton}{cancelButton}</div>;
+    return <div>{editButton}{this.props.skill.contains !== undefined ? addButton : null}{cancelButton}</div>;
   };
+
+  render() {
+    if (this.props.editing) {
+      return this.editing();
+    }
+    else {
+      return (
+        <div onClick={this.startEdit}>
+          {this.label()}
+          {this.props.skill.name ? <div>{this.props.skill.name}</div> : null}
+          <div>{this.total()}</div>
+        </div>);
+    }
+  }
 
   constructor(props: Skill & Props) {
     super(props);
-    this.state = {skill: this.props, selected: 0, mark: false};
+    this.state = {skill: this.props.skill, selected: 0, mark: false};
+  }
+
+  private label() {
+    const subSkill = this.subSkill();
+    const tag = this.props.skill.tag;
+    const modern = tag !== undefined && tag.includes("modern");
+    const irregular = tag !== undefined && tag.includes("irregular");
+
+    return (<div>
+      <span>{this.props.skill.label}{subSkill !== null ? ": " + subSkill.label : null}</span>
+      {modern ? (<span><FontAwesomeIcon title="现代" icon={faDesktop}/></span>) : null}
+      {irregular ? <span><FontAwesomeIcon title="非常规" icon={faPagelines}/></span> : null}
+    </div>);
   }
 
   private total(): number {
     const initial = this.initial();
-    const occupation = this.props.occupation;
-    const interest = this.props.interest;
-    const growth = this.props.growth;
+    const occupation = this.props.skill.occupation;
+    const interest = this.props.skill.interest;
+    const growth = this.props.skill.growth;
     let total = 0;
     if (initial) total += initial;
     if (occupation) total += occupation;
@@ -146,26 +173,19 @@ export class SkillItem extends React.Component<Skill & Props, State> {
     return total;
   }
 
-  render() {
-    if (this.props.editing) {
-      return this.editing();
-    }
-    else {
-      const subSkill = this.subSkill();
-      return <div onClick={this.startEdit}>
-        <div>{this.props.label}{subSkill !== null ? ": " + subSkill.label : null}</div>
-        {this.props.name ? <div>{this.props.name}</div> : null}
-        <div>{this.total()}</div>
-      </div>;
-    }
-  }
-
   private editing() {
-    return (<div>
-      <input
+    let label = null;
+    if (this.state.selected === "other") {
+      label = <input
         onChange={(e) => this.editSkill({label: e.currentTarget.value})}
         value={this.state.skill.label}
-      />
+      />;
+    }
+    else {
+      label = this.label();
+    }
+    return (<div>
+      {label}
       <div>{this.select()}</div>
       {this.skillPointInputs()}
       <div>{this.total()}</div>
@@ -184,12 +204,12 @@ export class SkillItem extends React.Component<Skill & Props, State> {
       return this.state.skill.contains[selected].initial;
     }
     else {
-      return this.props.initial;
+      return this.props.skill.initial;
     }
   }
 
   private subSkill() {
-    const contains = this.props.contains;
+    const contains = this.props.skill.contains;
     const selected = this.state.selected;
     if (contains === undefined) {
       return null
@@ -202,10 +222,3 @@ export class SkillItem extends React.Component<Skill & Props, State> {
     }
   }
 }
-
-
-// export class Dodge extends React.Component<Skill & Props, State> {
-//   render() {
-//     return null;
-//   }
-// }

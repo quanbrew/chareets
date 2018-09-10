@@ -41,27 +41,3 @@ export class StatusItem extends React.Component<Props, State> {
       </div>);
   }
 }
-
-//
-// class StatusSelect extends React.Component {
-//   private status = {
-//     physical_normal: "身体正常",
-//     psychological_normal: "心理正常",
-//     insanity_indefinite: "不定时疯狂",
-//     insanity_permanent: "永久疯狂",
-//     insanity_temporary: "临时疯狂",
-//     major_wound: "重伤",
-//     dying: "濒死",
-//     dead: "死亡"
-//   };
-//
-//   render() {
-//     const statusOptions = [];
-//     for (let key in this.status) {
-//       statusOptions.push({value: key, label: this.status[key]})
-//     }
-//     return <Select isMulti options={statusOptions}/>
-//   }
-// }
-
-

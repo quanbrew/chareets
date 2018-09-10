@@ -127,7 +127,7 @@ class Attributes extends React.Component<Props, AttributesState> {
       edu: 5 * (r(2, 6) + 6),
       luck: 5 * r(3, 6),
     });
-    this.setState((prev: AttributesState) => ({rollAttr: prev.rollAttr + 1}));
+    this.setState((prev: AttributesState) => ({rollAttr: prev.rollAttr + 1, eduEnhance: 0}));
     this.props.set(next);
   };
   eduEnhance = () => {

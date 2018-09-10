@@ -26,6 +26,10 @@ export const languages: Array<SubSkill> = [
 
 
 export const skills: Array<Skill> = [
+  // initial value equals DEX/2, hardcoded in `SkillTable`
+  {label: "闪避", name: "Dodge", initial: undefined},
+  // initial value equals EDU, hardcoded in `SkillTable`
+  {label: "语言（母语）", name: "Language (Own)", initial: undefined, tag: "blank", contains: languages},
   {label: "心理学", name: "Psychology", initial: 10},
   {label: "信用评级", name: "Credit Rating", initial: 0},
   {label: "话术", name: "Fast Talk", initial: 5},
@@ -89,8 +93,6 @@ export const skills: Array<Skill> = [
   {label: "急救", name: "First Aid", initial: 30},
   {label: "医学", name: "Medicine", initial: 1},
   {label: "催眠", name: "Hypnosis", initial: 1, tag: "irregular"},
-  // initial value equals DEX/2, hardcoded in `SkillTable`
-  {label: "闪避", name: "Dodge", initial: undefined},
   {
     label: "格斗", name: "Fighting", initial: undefined, contains: [
       {label: "斗殴", name: "Brawl", initial: 25},
@@ -132,7 +134,5 @@ export const skills: Array<Skill> = [
   {label: "潜水", name: "Diving", initial: 1, tag: "irregular"},
   {label: "炮术", name: "Artillery", initial: 1, tag: "irregular"},
   {label: "爆破", name: "Demolitions", initial: 1, tag: "irregular"},
-  {label: "语言", name: "Language (Other)", initial: undefined, tag: "blank", contains: languages},
-  // initial value equals EDU, hardcoded in `SkillTable`
-  {label: "语言（母语）", name: "Language (Own)", initial: undefined, tag: "blank", contains: languages}
+  {label: "语言", name: "Language (Other)", initial: undefined, tag: "blank", contains: languages}
 ];

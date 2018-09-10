@@ -1,5 +1,7 @@
 import * as React from 'react';
 import {List} from "immutable";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
 
 
 interface TagProps {
@@ -10,8 +12,8 @@ interface TagProps {
 
 class Tag extends React.Component<TagProps> {
   render() {
-    const remove = <button onClick={this.props.remove}>x</button>;
-    return (<div><span>{this.props.text}</span>{remove}</div>)
+    const remove = <button onClick={this.props.remove}><FontAwesomeIcon icon={faTrash}/></button>;
+    return (<li><span>{this.props.text}</span>{remove}</li>)
   }
 }
 
@@ -25,7 +27,15 @@ interface State {
 export class StatusMark extends React.Component<{}, State> {
   constructor(props: {}) {
     super(props);
-    this.state = {tags: List(), current: ""}
+    // physical_normal: "身体正常",
+    // psychological_normal: "心理正常",
+    // insanity_indefinite: "不定时疯狂",
+    // insanity_permanent: "永久疯狂",
+    // insanity_temporary: "临时疯狂",
+    // major_wound: "重伤",
+    // dying: "濒死",
+    // dead: "死亡"
+    this.state = {tags: List(["身体正常", "心理正常"]), current: ""}
   }
 
 
@@ -38,10 +48,9 @@ export class StatusMark extends React.Component<{}, State> {
     const submit = <button onClick={() => {
       const next = this.state.tags.push(this.state.current);
       this.setState({current: "", tags: next});
-    }}>+</button>;
+    }}><FontAwesomeIcon icon={faPlus}/></button>;
 
     const tags = this.state.tags
-      .toArray()
       .map((tag: string, i: number) =>
         (<Tag key={i} text={tag}
               remove={() => {
@@ -50,8 +59,9 @@ export class StatusMark extends React.Component<{}, State> {
       );
     return (
       <div>
-        {tags}
-        {input}{submit}
+        <strong>状态</strong>
+        <ul>{tags}</ul>
+        <div>{input}{submit}</div>
       </div>
     );
   }

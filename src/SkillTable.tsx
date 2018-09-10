@@ -59,13 +59,6 @@ export class SkillTable extends React.Component<Props, State> {
 
   dispatch(skill: Skill, index: number) {
     const name = skill.name;
-    const props: SkillItemProps = {
-      editing: this.state.editing === index,
-      startEdit: this.startEditSkill(index),
-      addSkill: this.addSkill,
-      cancelEdit: this.cancelEdit,
-      submitEdit: this.editSkill(index)
-    };
     if (name === "Dodge") {
       const dex = this.props.attributes.get("dex");
       if (dex !== undefined) skill.initial = div(dex, 2);
@@ -73,8 +66,16 @@ export class SkillTable extends React.Component<Props, State> {
     else if (name === "Language (Own)") {
       skill.initial = this.props.attributes.get("edu");
     }
+
+    const props: SkillItemProps = {
+      skill: skill,
+      editing: this.state.editing === index,
+      startEdit: this.startEditSkill(index),
+      addSkill: this.addSkill,
+      cancelEdit: this.cancelEdit,
+      submitEdit: this.editSkill(index)
+    };
     return <SkillItem
-      {...skill}
       key={index}
       {...props}
     />;
@@ -82,11 +83,12 @@ export class SkillTable extends React.Component<Props, State> {
 
   render() {
     const skillList = this.state.skills
-      .filter(this.isSkillMatch).toArray()
+      .filter(this.isSkillMatch)
+      .toArray()
       .map((skill: Skill, index: number) => this.dispatch(skill, index))
       .sort((a, b) => {
-        const m = a.props.name.concat(a.props.label);
-        const n = b.props.name.concat(b.props.label);
+        const m = a.props.skill.name.concat(a.props.skill.label);
+        const n = b.props.skill.name.concat(b.props.skill.label);
         return m.localeCompare(n);
       });
 
