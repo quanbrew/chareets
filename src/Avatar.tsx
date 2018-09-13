@@ -2,6 +2,8 @@ import * as React from 'react';
 import {SyntheticEvent} from 'react';
 import AvatarEditor from 'react-avatar-editor'
 import Dropzone from "react-dropzone";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faTrash} from "@fortawesome/free-solid-svg-icons";
 
 
 interface State {
@@ -14,6 +16,7 @@ export class Avatar extends React.Component<{}, State> {
   handleDrop = (dropped: Array<File>) => this.setState({image: dropped[0]});
   handleRange = (e: SyntheticEvent<HTMLInputElement>) =>
     this.setState({scale: Number(e.currentTarget.value)});
+  clearImage = () => this.setState({image: undefined});
 
   constructor(props: {}) {
     super(props);
@@ -28,19 +31,25 @@ export class Avatar extends React.Component<{}, State> {
     const scale = this.state.scale;
     const color = [255, 255, 255, 0.6];
 
+    const clear = (<button onClick={this.clearImage}><FontAwesomeIcon icon={faTrash}/></button>);
+    const scale_input = (
+      <input type="range" value={this.state.scale} onChange={this.handleRange}
+             min={1.0} max={6.0} step={0.01}/>
+    );
+
     return (
       <div>
         <Dropzone
           onDrop={this.handleDrop}
-          disableClick
+          disableClick={avatar !== undefined}
           style={{width: `${zone_size}px`, height: `${zone_size}px`}}
         >
           {avatar ?
             (<AvatarEditor image={avatar} width={size} height={size} border={border}
                            color={color} scale={scale} rotate={0}/>) :
-            (<div>请将角色的图片拖进这里</div>)}
+            (<div>请将角色的图片拖进这里，或者点击上传</div>)}
         </Dropzone>
-        <input type="range" value={this.state.scale} min={1.0} max={6.0} step={0.01} onChange={this.handleRange}/>
+        {avatar ? <div>{clear}{scale_input}</div> : null}
       </div>
     );
   }
