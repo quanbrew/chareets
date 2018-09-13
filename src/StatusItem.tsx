@@ -29,15 +29,17 @@ export class StatusItem extends React.Component<Props, State> {
     const upper = this.props.upper;
     const value = this.state.value;
     const label = this.props.label;
-    const onChange = (v: number) => this.setState({value: v, edited: true});
+    const onChange = (new_value: number) =>
+      this.setState({value: new_value, edited: true});
     const upperLimitHint = <span className=""> / {upper === undefined ? "?" : upper}</span>;
 
     return (
-      <div className="">
+      <div className="StatusItem">
         <label className="" htmlFor={label}>{label}</label>
-        <NumberInput upper={upper} id={label} className="input"
-                     value={this.state.edited ? value : upper} onChange={onChange}/>
+        <NumberInput value={this.state.edited ? value : upper} onChange={onChange}
+                     upper={upper} id={label} className="input"/>
         {upperLimitHint}
-      </div>);
+      </div>
+    );
   }
 }

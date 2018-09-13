@@ -58,8 +58,8 @@ export class StatusMark extends React.Component<{}, State> {
               }}/>)
       );
     return (
-      <div>
-        <strong>状态</strong>
+      <div className="StatusMark">
+        <strong>状态与备注</strong>
         <ul>{tags}</ul>
         <div>{input}{submit}</div>
       </div>

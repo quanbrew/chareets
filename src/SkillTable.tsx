@@ -93,7 +93,7 @@ export class SkillTable extends React.Component<Props, State> {
       });
 
     return (
-      <div>
+      <div className="SkillTable">
         {this.skillFilter()}
         <div>{skillList}</div>
       </div>

@@ -1,8 +1,8 @@
-import {Skill} from "./skillData";
+import {Skill, SubSkill} from "./skillData";
 import * as React from "react";
 import {SyntheticEvent} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faDesktop, faPlusSquare, faSave, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
+import {faCodeBranch, faDesktop, faPlusSquare, faSave, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
 import NumberInput from "./fields/NumberInput";
 import {faPagelines} from "@fortawesome/free-brands-svg-icons";
 
@@ -134,7 +134,7 @@ export class SkillItem extends React.Component<Props, State> {
     }
     else {
       return (
-        <div onClick={this.startEdit}>
+        <div className="SkillItem" onClick={this.startEdit}>
           {this.label()}
           {this.props.skill.name ? <div>{this.props.skill.name}</div> : null}
           <div>{this.total()}</div>
@@ -152,9 +152,11 @@ export class SkillItem extends React.Component<Props, State> {
     const tag = this.props.skill.tag;
     const modern = tag !== undefined && tag.includes("modern");
     const irregular = tag !== undefined && tag.includes("irregular");
+    const variantIcon = <span>{subSkill ? <FontAwesomeIcon title="分支" icon={faCodeBranch}/> : null}</span>;
+    const subSkillName = <span>{subSkill !== null ? subSkill.label : null}</span>;
 
     return (<div>
-      <span>{this.props.skill.label}{subSkill !== null ? ": " + subSkill.label : null}</span>
+      <span>{this.props.skill.label}{variantIcon}{subSkillName}</span>
       {modern ? (<span><FontAwesomeIcon title="现代" icon={faDesktop}/></span>) : null}
       {irregular ? <span><FontAwesomeIcon title="非常规" icon={faPagelines}/></span> : null}
     </div>);
@@ -184,13 +186,15 @@ export class SkillItem extends React.Component<Props, State> {
     else {
       label = this.label();
     }
-    return (<div>
-      {label}
-      <div>{this.select()}</div>
-      {this.skillPointInputs()}
-      <div>{this.total()}</div>
-      {this.buttons()}
-    </div>);
+    return (
+      <div>
+        {label}
+        <div>{this.select()}</div>
+        {this.skillPointInputs()}
+        <div>{this.total()}</div>
+        {this.buttons()}
+      </div>
+    );
   }
 
   private initial(): number | undefined {
@@ -208,7 +212,7 @@ export class SkillItem extends React.Component<Props, State> {
     }
   }
 
-  private subSkill() {
+  private subSkill(): null | SubSkill {
     const contains = this.props.skill.contains;
     const selected = this.state.selected;
     if (contains === undefined) {

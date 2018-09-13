@@ -83,7 +83,7 @@ class AgeField extends React.PureComponent<FieldProps> {
       hint = AgeField.ageHint(age);
     }
     return (
-      <div className="">
+      <div className="Attributes">
         <label className="" htmlFor={this.props.name}>{this.props.label}</label>
         <NumberInput value={this.props.value} id={this.props.name}
                      onChange={this.props.set}
