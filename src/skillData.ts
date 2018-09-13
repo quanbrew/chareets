@@ -21,6 +21,13 @@ export const languages: Array<SubSkill> = [
   {label: "汉语", name: "chinese", initial: 1},
   {label: "英语", name: "english", initial: 1},
   {label: "日语", name: "japanese", initial: 1},
+  {label: "西班牙语", name: "spanish", initial: 1},
+  {label: "法语", name: "french", initial: 1},
+  {label: "俄语", name: "russian", initial: 1},
+  {label: "阿拉伯语", name: "arabic", initial: 1},
+  {label: "韩语", name: "korean", initial: 1},
+  {label: "德语", name: "german", initial: 1},
+  {label: "希腊语", name: "greek", initial: 1},
   {label: "拉丁语", name: "latin", initial: 1}
 ];
 
