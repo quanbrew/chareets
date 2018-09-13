@@ -1,5 +1,9 @@
 import * as React from 'react';
 import {Map} from "immutable";
+import AvatarEditor from 'react-avatar-editor'
+import Dropzone from "react-dropzone";
+import lovecraft from "./lovecraft.jpg";
+
 
 interface FieldProps {
   label: string;
@@ -34,12 +38,44 @@ interface Props {
 }
 
 
-export class Information extends React.Component<Props, {}> {
+interface State {
+  image: File,
+}
+
+
+export class Information extends React.Component<Props, State> {
+  handleDrop = (dropped: Array<File>) => this.setState({image: dropped[0]});
+
+  constructor(props: Props) {
+    super(props);
+    this.state = {image: lovecraft};
+  }
+
   public render() {
+    const size = 200;
+    const border = 25;
+    const zone_size = size + border * 2;
     const name = (k: string) =>
       ({name: k, value: this.props.information.get(k, ""), set: this.props.set(k)});
     return (
       <div className="">
+        拖入图片
+        <Dropzone
+          onDrop={this.handleDrop}
+          disableClick
+          style={{width: `${zone_size}px`, height: `${zone_size}px`}}
+        >
+          <AvatarEditor
+            image={this.state.image}
+            width={size}
+            height={size}
+            border={border}
+            color={[255, 255, 255, 0.6]} // RGBA
+            scale={1.2}
+            rotate={0}
+          />
+        </Dropzone>
+
         <Field label="名称" {...name("name")}/>
         <Field label="玩家" {...name("player")}/>
         <Field label="职业" {...name("occupation")}/>
