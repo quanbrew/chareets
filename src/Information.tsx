@@ -53,5 +53,3 @@ export class Information extends React.Component<Props> {
     );
   }
 }
-
-export default Information;

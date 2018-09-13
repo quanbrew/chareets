@@ -128,6 +128,11 @@ export class SkillItem extends React.Component<Props, State> {
     return <div>{editButton}{this.props.skill.contains !== undefined ? addButton : null}{cancelButton}</div>;
   };
 
+  constructor(props: Skill & Props) {
+    super(props);
+    this.state = {skill: this.props.skill, selected: 0, mark: false};
+  }
+
   render() {
     if (this.props.editing) {
       return this.editing();
@@ -140,11 +145,6 @@ export class SkillItem extends React.Component<Props, State> {
           <div>{this.total()}</div>
         </div>);
     }
-  }
-
-  constructor(props: Skill & Props) {
-    super(props);
-    this.state = {skill: this.props.skill, selected: 0, mark: false};
   }
 
   private label() {

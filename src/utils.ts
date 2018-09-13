@@ -4,10 +4,7 @@ export function randomIntFromInterval(min: number, max: number): number {
 
 
 export function div(a: number, b: number): number {
-  if (b === 0) {
-    return 0;
-  }
-  return Math.floor(a / b);
+  return b === 0 ? 0 : Math.floor(a / b);
 }
 
 

@@ -3,8 +3,8 @@ import {Map} from 'immutable';
 import './Sheet.sass';
 
 import logo from './logo.svg';
-import Information from './Information';
-import Attributes from './Attributes';
+import {Information} from './Information';
+import {Stats} from './Stats';
 import {SkillTable} from "./SkillTable";
 
 export type Attributes = Map<string, number>;
@@ -46,7 +46,7 @@ class Sheet extends React.Component<{}, SheetData> {
           </header>
 
           <Information information={this.state.information} set={this.setInformation}/>
-          <Attributes attributes={this.state.attributes} set={this.setAttributes}/>
+          <Stats attributes={this.state.attributes} set={this.setAttributes}/>
           <SkillTable attributes={this.state.attributes}/>
         </div>
       </SheetContext.Provider>

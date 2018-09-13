@@ -1,0 +1,105 @@
+import * as React from "react";
+import {randomIntFromInterval} from "../utils";
+import NumberInput from "./NumberInput";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faDice} from "@fortawesome/free-solid-svg-icons";
+import {Props} from "./AttributeField";
+
+
+interface OutRange {
+  type: "OutRange"
+}
+
+interface Young {
+  type: "Young"
+}
+
+
+interface Normal {
+  type: "Normal";
+  eduEnhance: number;
+  totalSub: number;
+  appSub: number;
+}
+
+
+export function ageAffect(age: number): Normal | Young | OutRange {
+  if (age < 15 || age > 90) return {type: "OutRange"};
+  else if (age < 20) return {type: "Young"};
+  let affect: Normal = {type: "Normal", eduEnhance: 0, totalSub: 0, appSub: 0};
+
+  if (age < 40) {
+    affect.eduEnhance = 1;
+  }
+  else if (age < 50) {
+    affect.eduEnhance = 2;
+    affect.totalSub = 5;
+    affect.appSub = 5;
+  }
+  else if (age < 60) {
+    affect.eduEnhance = 3;
+    affect.totalSub = 10;
+    affect.appSub = 10;
+  }
+  else if (age < 70) {
+    affect.eduEnhance = 4;
+    affect.totalSub = 20;
+    affect.appSub = 15;
+  }
+  else if (age < 80) {
+    affect.eduEnhance = 4;
+    affect.totalSub = 40;
+    affect.appSub = 20;
+  }
+  else {
+    affect.eduEnhance = 4;
+    affect.totalSub = 80;
+    affect.appSub = 25;
+  }
+  return affect;
+}
+
+
+function AgeHint(props: { age?: number }) {
+  if (props.age === undefined) return null;
+
+  const affect = ageAffect(props.age);
+  if (affect.type === "OutRange") {
+    return <div>超出可选范围，请与守密人协商。</div>;
+  }
+  else if (affect.type === "Young") {
+    return <div>力量和体型合计减 5 点。教育减 5 点。 决定幸运值时可以骰 2 次并取较好的一次。</div>;
+  }
+  else {
+    return (
+      <div>
+        {affect.eduEnhance === 0 ? null : <span>对教育进行 {affect.eduEnhance} 次增强检定。</span>}
+        {affect.totalSub === 0 ? null : <span>力量体质敏捷合计减 {affect.totalSub}。</span>}
+        {affect.appSub === 0 ? null : <span>外貌减 {affect.appSub} 点。</span>}
+      </div>
+    );
+  }
+}
+
+
+export class AgeField extends React.PureComponent<Props> {
+  autoAge = (): number => Array.from(Array(4).keys())
+    .map((): number => randomIntFromInterval(15, 90))
+    .reduce((a, b) => Math.min(a, b), 100);
+
+  public render() {
+    const age = this.props.value;
+    return (
+      <div className="Attributes">
+        <label className="" htmlFor={this.props.name}>{this.props.label}</label>
+        <NumberInput value={this.props.value} id={this.props.name}
+                     onChange={this.props.set}
+                     className=""/>
+        <button className="" onClick={() => this.props.set(this.autoAge())}>
+          <FontAwesomeIcon icon={faDice}/>
+        </button>
+        <AgeHint age={age}/>
+      </div>
+    )
+  }
+}
