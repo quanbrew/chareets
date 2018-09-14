@@ -6,55 +6,60 @@ import {faDice} from "@fortawesome/free-solid-svg-icons";
 import {Props} from "./AttributeField";
 
 
-interface OutRange {
+export interface OutRange {
   type: "OutRange"
 }
 
-interface Young {
+export interface Young {
   type: "Young"
 }
 
 
-interface Normal {
+export interface Normal {
   type: "Normal";
   eduEnhance: number;
-  totalSub: number;
-  appSub: number;
+  multiDeduct: number;
+  appDeduct: number;
 }
 
 
 export function ageAffect(age: number): Normal | Young | OutRange {
   if (age < 15 || age > 90) return {type: "OutRange"};
   else if (age < 20) return {type: "Young"};
-  let affect: Normal = {type: "Normal", eduEnhance: 0, totalSub: 0, appSub: 0};
+  let affect: Normal = {
+    type: "Normal",
+    eduEnhance: 0,
+    multiDeduct: 0,
+    appDeduct: 0
+  };
 
   if (age < 40) {
     affect.eduEnhance = 1;
   }
   else if (age < 50) {
     affect.eduEnhance = 2;
-    affect.totalSub = 5;
-    affect.appSub = 5;
+    affect.multiDeduct = 5;
+    affect.appDeduct = 5;
   }
   else if (age < 60) {
     affect.eduEnhance = 3;
-    affect.totalSub = 10;
-    affect.appSub = 10;
+    affect.multiDeduct = 10;
+    affect.appDeduct = 10;
   }
   else if (age < 70) {
     affect.eduEnhance = 4;
-    affect.totalSub = 20;
-    affect.appSub = 15;
+    affect.multiDeduct = 20;
+    affect.appDeduct = 15;
   }
   else if (age < 80) {
     affect.eduEnhance = 4;
-    affect.totalSub = 40;
-    affect.appSub = 20;
+    affect.multiDeduct = 40;
+    affect.appDeduct = 20;
   }
   else {
     affect.eduEnhance = 4;
-    affect.totalSub = 80;
-    affect.appSub = 25;
+    affect.multiDeduct = 80;
+    affect.appDeduct = 25;
   }
   return affect;
 }
@@ -70,15 +75,16 @@ function AgeHint(props: { age?: number }) {
   else if (affect.type === "Young") {
     return <div>力量和体型合计减 5 点。教育减 5 点。 决定幸运值时可以骰 2 次并取较好的一次。</div>;
   }
-  else {
+  else if (affect.type === "Normal") {
     return (
       <div>
         {affect.eduEnhance === 0 ? null : <span>对教育进行 {affect.eduEnhance} 次增强检定。</span>}
-        {affect.totalSub === 0 ? null : <span>力量体质敏捷合计减 {affect.totalSub}。</span>}
-        {affect.appSub === 0 ? null : <span>外貌减 {affect.appSub} 点。</span>}
+        {affect.multiDeduct === 0 ? null : <span>力量体质敏捷合计减 {affect.multiDeduct}。</span>}
+        {affect.appDeduct === 0 ? null : <span>外貌减 {affect.appDeduct} 点。</span>}
       </div>
     );
   }
+  return null;
 }
 
 

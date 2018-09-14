@@ -7,7 +7,7 @@ import {StatusItem} from "./StatusItem";
 import {StatusMark} from "./StatusMark";
 import {Attributes} from "./Sheet";
 import {AttributeField as Field} from "./fields/AttributeField";
-import {AgeField} from "./fields/AgeField";
+import {ageAffect, AgeField} from "./fields/AgeField";
 
 
 interface Props {
@@ -62,12 +62,8 @@ class EduEnhance extends React.Component<Props> {
     const times = this.props.attributes.get(EduEnhance.KEY, 0);
     let edu = this.props.attributes.get("edu");
     if (edu === undefined) return;
-    if (roll(1, 100)[0] > edu) {
-      edu += roll(1, 10)[0];
-      if (edu > 99) {
-        edu = 99
-      }
-    }
+    if (roll(1, 100)[0] > edu)
+      edu = Math.min(99, edu + roll(1, 10)[0]);
     const next = this.props.attributes
       .set(EduEnhance.KEY, times + 1)
       .set("edu", edu);
@@ -78,8 +74,36 @@ class EduEnhance extends React.Component<Props> {
     const count = this.props.attributes.get(EduEnhance.KEY, 0);
     return (<div>
       <button onClick={this.eduEnhance}><FontAwesomeIcon icon={faGraduationCap}/>增强检定</button>
-      {count > 0 ? <span>已增强{count}次</span> : null}
+      {this.shouldEnhanceTimes()}{count > 0 ? <span>已增强 {count} 次</span> : null}
     </div>);
+  }
+
+  private shouldEnhanceTimes() {
+    const age = this.props.attributes.get("age");
+    if (age === undefined) return null;
+    const affect = ageAffect(age);
+    if (affect.type === "Normal") {
+      const times = affect.eduEnhance;
+      return <span>需要增强 {times} 次 </span>;
+    }
+    else return null;
+  }
+}
+
+
+class AppDeduct extends React.Component<Props> {
+  render() {
+    const age = this.props.attributes.get("age");
+    if (age === undefined) return null;
+    const affect = ageAffect(age);
+    const attr = this.props.attributes;
+    const app = attr.get("app");
+    if (affect.type !== "Normal" || affect.appDeduct === 0 || app === undefined)
+      return null;
+    const sub = affect.appDeduct;
+    return <button onClick={() => {
+      this.props.set(attr.set("app", app - sub))
+    }}>-{sub}</button>;
   }
 }
 
@@ -114,17 +138,21 @@ function dbAndBuild(attr: Attributes): [string | null, number | null] {
 }
 
 
-function Db(props: Props) {
-  const db = dbAndBuild(props.attributes)[0];
-  const value = <span>{db === null ? "??" : db}</span>;
-  return <p>伤害加深（DB）：{value}</p>
+class Db extends React.Component<Props> {
+  render() {
+    const db = dbAndBuild(this.props.attributes)[0];
+    const value = <span>{db === null ? "??" : db}</span>;
+    return <p>伤害加深（DB）：{value}</p>
+  }
 }
 
 
-function Build(props: Props) {
-  const build = dbAndBuild(props.attributes)[1];
-  const value = <span>{build === null ? "??" : build}</span>;
-  return <p>体格（Build）：{value}</p>
+class Build extends React.Component<Props> {
+  render() {
+    const build = dbAndBuild(this.props.attributes)[1];
+    const value = <span>{build === null ? "??" : build}</span>;
+    return <p>体格（Build）：{value}</p>
+  }
 }
 
 
@@ -236,7 +264,7 @@ export class Stats extends React.Component<Props> {
           <Field label="体质" {...name("con")} upper={99}/>
           <Field label="体型" {...name("siz")}/>
           <Field label="敏捷" {...name("dex")} upper={99}/>
-          <Field label="外貌" {...name("app")} upper={99}/>
+          <Field label="外貌" {...name("app")} upper={99}><AppDeduct {...this.props}/></Field>
           <Field label="智力" {...name("int")} upper={99}/>
           <Field label="意志" {...name("pow")}/>
           <Field label="教育" {...name("edu")} upper={99}><EduEnhance {...this.props}/></Field>
