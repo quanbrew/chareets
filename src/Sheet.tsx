@@ -6,6 +6,9 @@ import logo from './logo.svg';
 import {Information} from './Information';
 import {Stats} from './Stats';
 import {SkillTable} from "./SkillTable";
+import {Backstory} from "./Backstory";
+import {ItemList} from "./ItemList";
+import {Note} from "./Note";
 
 export type Attributes = Map<string, number>;
 
@@ -47,7 +50,15 @@ class Sheet extends React.Component<{}, SheetData> {
 
           <Information information={this.state.information} set={this.setInformation}/>
           <Stats attributes={this.state.attributes} set={this.setAttributes}/>
+
+          <Backstory/>
           <SkillTable attributes={this.state.attributes}/>
+
+          <div>
+            <p>随身物品</p>
+            <ItemList/>
+          </div>
+          <Note/>
         </div>
       </SheetContext.Provider>
     );

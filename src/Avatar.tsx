@@ -3,7 +3,7 @@ import {SyntheticEvent} from 'react';
 import AvatarEditor from 'react-avatar-editor'
 import Dropzone from "react-dropzone";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faTrash} from "@fortawesome/free-solid-svg-icons";
+import {faCloudUploadAlt, faTrash} from "@fortawesome/free-solid-svg-icons";
 
 
 interface State {
@@ -47,7 +47,7 @@ export class Avatar extends React.Component<{}, State> {
           {avatar ?
             (<AvatarEditor image={avatar} width={size} height={size} border={border}
                            color={color} scale={scale} rotate={0}/>) :
-            (<div>请将角色的图片拖进这里，或者点击上传</div>)}
+            (<div>请将角色的图片拖进这里，或者点击上传<FontAwesomeIcon icon={faCloudUploadAlt}/></div>)}
         </Dropzone>
         {avatar ? <div>{clear}{scale_input}</div> : null}
       </div>

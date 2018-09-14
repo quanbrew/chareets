@@ -23,6 +23,13 @@ class AutoRoll extends React.Component<Props> {
     const r = (n: number, face: number): number =>
       roll(n, face).reduce((x, y) => x + y);
     const attr = this.props.attributes;
+    const affect = ageAffect(attr.get("age", 0));
+    let luck1 = 5 * r(3, 6);
+    let luck2 = 5 * r(3, 6);
+    if (affect.type === "Young" && luck2 > luck1) {
+      [luck1, luck2] = [luck2, luck1];
+    }
+
     const count = attr.get(AutoRoll.KEY, 0);
     const next = attr
       .set(AutoRoll.KEY, count + 1)
@@ -36,7 +43,8 @@ class AutoRoll extends React.Component<Props> {
         int: 5 * (r(2, 6) + 6),
         pow: 5 * r(3, 6),
         edu: 5 * (r(2, 6) + 6),
-        luck: 5 * r(3, 6)
+        luck: luck1,
+        luck2: luck2
       });
     this.props.set(next);
   };
@@ -248,6 +256,8 @@ class Sum extends React.Component<Props> {
 export class Stats extends React.Component<Props> {
   public render() {
     const attr = this.props.attributes;
+    const affect = ageAffect(attr.get("age", 0));
+    const luck2 = attr.get("luck2");
     const name = (k: string) =>
       ({
         name: k,
@@ -270,6 +280,7 @@ export class Stats extends React.Component<Props> {
           <Field label="教育" {...name("edu")} upper={99}><EduEnhance {...this.props}/></Field>
           <Sum {...this.props}/>
           <Field label="幸运" {...name("luck")} upper={99}/>
+          {affect.type === "Young" && luck2 !== undefined ? <p>已投两次幸运取大值（较小 {luck2}）。</p> : null}
         </div>
         <StatusMark/>
         <div className="other-attributes">

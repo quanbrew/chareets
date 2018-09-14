@@ -35,7 +35,7 @@ export class StatusMark extends React.Component<{}, State> {
     // major_wound: "重伤",
     // dying: "濒死",
     // dead: "死亡"
-    this.state = {tags: List(["身体正常", "心理正常"]), current: ""}
+    this.state = {tags: List(["身体正常", "心理正常", "非神话相信者"]), current: ""}
   }
 
 
