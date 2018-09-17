@@ -38,18 +38,19 @@ export class Avatar extends React.Component<{}, State> {
     );
 
     return (
-      <div>
+      <div className="Avatar">
         <Dropzone
           onDrop={this.handleDrop}
           disableClick={avatar !== undefined}
+          className="avatar-drop"
           style={{width: `${zone_size}px`, height: `${zone_size}px`}}
         >
           {avatar ?
             (<AvatarEditor image={avatar} width={size} height={size} border={border}
                            color={color} scale={scale} rotate={0}/>) :
-            (<div>请将角色的图片拖进这里，或者点击上传<FontAwesomeIcon icon={faCloudUploadAlt}/></div>)}
+            (<div className="help">请将角色的图片拖进这里，或者点击上传<FontAwesomeIcon icon={faCloudUploadAlt}/></div>)}
         </Dropzone>
-        {avatar ? <div>{clear}{scale_input}</div> : null}
+        {avatar ? <div className="tool">{clear}{scale_input}</div> : null}
       </div>
     );
   }

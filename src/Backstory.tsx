@@ -57,7 +57,7 @@ export class Backstory extends React.Component<{}, State> {
         onChange={(s: string) => this.setState((prev: State) => ({...prev, [name]: s}))}
       />;
     return (
-      <div>
+      <div className="section Backstory">
         {make("personalDescription", "个人描述")}
         {make("ideologyOrBeliefs", "思想/信念")}
         {make("significantPeople", "重要之人")}

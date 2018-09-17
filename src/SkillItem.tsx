@@ -133,20 +133,20 @@ export class SkillItem extends React.Component<Props, State> {
   }
 
   render() {
-    if (this.props.editing) {
-      return this.editing();
-    }
-    else {
-      const skill = this.props.skill;
-      const hasOccupation = (skill.occupation !== undefined && skill.occupation > 0) ? " hasOccupation" : "";
-      const hasGrowth = (skill.growth !== undefined && skill.growth > 0) ? " hasGrowth" : "";
-      return (
-        <div className={"SkillItem" + hasOccupation + hasGrowth} onClick={this.startEdit}>
+    const skill = this.props.skill;
+    const hasOccupation = (skill.occupation !== undefined && skill.occupation > 0) ? "hasOccupation" : "";
+    const hasInterest = (skill.interest !== undefined && skill.interest > 0) ? " hasInterest" : "";
+    const hasGrowth = (skill.growth !== undefined && skill.growth > 0) ? " hasGrowth" : "";
+    return (
+      <div className={"SkillItem"}>
+
+        {this.props.editing ? this.editing() : null}
+        <div className={hasOccupation + hasGrowth + hasInterest} onClick={this.startEdit}>
           {this.label()}
           {this.props.skill.name ? <div>{this.props.skill.name}</div> : null}
-          <div>{this.total()}</div>
-        </div>);
-    }
+          <div className="total">{this.total()}</div>
+        </div>
+      </div>);
   }
 
   private label() {
@@ -157,7 +157,7 @@ export class SkillItem extends React.Component<Props, State> {
     const variantIcon = <span>{subSkill ? <FontAwesomeIcon title="分支" icon={faCodeBranch}/> : null}</span>;
     const subSkillName = <span>{subSkill !== null ? subSkill.label : null}</span>;
 
-    return (<div>
+    return (<div className="skill-label">
       <span>{this.props.skill.label}{variantIcon}{subSkillName}</span>
       {modern ? (<span><FontAwesomeIcon title="现代" icon={faDesktop}/></span>) : null}
       {irregular ? <span><FontAwesomeIcon title="非常规" icon={faPagelines}/></span> : null}
@@ -166,9 +166,10 @@ export class SkillItem extends React.Component<Props, State> {
 
   private total(): number {
     const initial = this.initial();
-    const occupation = this.props.skill.occupation;
-    const interest = this.props.skill.interest;
-    const growth = this.props.skill.growth;
+    const skill = this.props.editing ? this.state.skill : this.props.skill;
+    const occupation = skill.occupation;
+    const interest = skill.interest;
+    const growth = skill.growth;
     let total = 0;
     if (initial) total += initial;
     if (occupation) total += occupation;
@@ -189,11 +190,11 @@ export class SkillItem extends React.Component<Props, State> {
       label = this.label();
     }
     return (
-      <div>
+      <div className="editing">
         {label}
         <div>{this.select()}</div>
         {this.skillPointInputs()}
-        <div>{this.total()}</div>
+        <div className="total">{this.total()}</div>
         {this.buttons()}
       </div>
     );

@@ -5,6 +5,7 @@ import {Props as SkillItemProps, SkillItem} from "./SkillItem";
 import {Attributes} from "./Sheet";
 import {div} from "./utils";
 import {Occupation} from "./Occupation";
+import NumberInput from "./fields/NumberInput";
 
 interface Props {
   attributes: Attributes;
@@ -108,9 +109,10 @@ export class SkillTable extends React.Component<Props, State> {
     const total = this.totalSkillPoint();
 
     return (
-      <div className="SkillTable">
+      <div className="SkillTable section">
         <Occupation/>
-        <div>已花费 {total.occupation} 职业点，{total.interest} 兴趣点</div>
+        <div>已花费 {total.occupation}/<NumberInput/> 职业点，{total.interest}/{this.props.attributes.get("int", 0) * 2} 兴趣点
+        </div>
         {this.skillFilter()}
         <div>{skillList}</div>
       </div>

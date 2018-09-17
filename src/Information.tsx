@@ -40,7 +40,7 @@ export class Information extends React.Component<Props> {
     const name = (k: string) =>
       ({name: k, value: this.props.information.get(k, ""), set: this.props.set(k)});
     return (
-      <div className="Information">
+      <div className="Information section">
         <Avatar/>
 
         <Field label="名称" {...name("name")}/>

@@ -266,7 +266,7 @@ export class Stats extends React.Component<Props> {
       });
 
     return (
-      <div>
+      <div className="section Stats">
         <div>
           <AgeField label="年龄" {...name("age")} upper={99}/>
           <AutoRoll {...this.props}/>
