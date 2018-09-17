@@ -4,6 +4,7 @@ import {Skill, skills} from "./skillData";
 import {Props as SkillItemProps, SkillItem} from "./SkillItem";
 import {Attributes} from "./Sheet";
 import {div} from "./utils";
+import {Occupation} from "./Occupation";
 
 interface Props {
   attributes: Attributes;
@@ -108,6 +109,7 @@ export class SkillTable extends React.Component<Props, State> {
 
     return (
       <div className="SkillTable">
+        <Occupation/>
         <div>已花费 {total.occupation} 职业点，{total.interest} 兴趣点</div>
         {this.skillFilter()}
         <div>{skillList}</div>
