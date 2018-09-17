@@ -19,8 +19,6 @@ export interface Props {
 
 interface State {
   skill: Skill;
-  selected: number | "other";
-  mark: boolean;
 }
 
 
@@ -29,10 +27,11 @@ export class SkillItem extends React.Component<Props, State> {
 
   editSkill = (skill: Partial<Skill>) =>
     this.setState({skill: {...this.state.skill, ...skill}});
+
   private skillPointInputs = () => {
     const isCthulhuMythos = this.props.skill.name === "Cthulhu Mythos";
     const isCreditRating = this.props.skill.name === "Credit Rating";
-    const disableInitial = this.state.selected !== "other";
+    const disableInitial = this.state.skill.selected !== "other";
     const disableOccupation = isCthulhuMythos;
     const disableInterest = isCthulhuMythos;
     const disableGrowth = false;
@@ -75,8 +74,8 @@ export class SkillItem extends React.Component<Props, State> {
       {isCthulhuMythos || isCreditRating ? null : (
         <div>
           <label htmlFor="skill-growth-mark">标记</label>
-          <input id="skill-growth-mark" checked={this.state.mark} onChange={(e) => {
-            this.setState({mark: e.currentTarget.checked});
+          <input id="skill-growth-mark" checked={this.state.skill.mark === true} onChange={(e) => {
+            this.editSkill({mark: e.currentTarget.checked});
           }} type="checkbox"/>
         </div>
       )}
@@ -93,16 +92,16 @@ export class SkillItem extends React.Component<Props, State> {
       const updateSelect = (e: SyntheticEvent<HTMLSelectElement>) => {
         const selected: string = e.currentTarget.value;
         if (selected === "other") {
-          this.setState({selected: selected});
+          this.editSkill({selected: selected});
         }
         else {
           const i = Number(selected);
-          this.setState({selected: i});
-          this.editSkill({initial: contains[i].initial})
+          this.editSkill({selected: i, initial: contains[i].initial});
         }
       };
+      const selected = this.state.skill.selected;
       select = (
-        <select value={this.state.selected} onChange={updateSelect}>
+        <select value={selected === undefined ? 0 : selected} onChange={updateSelect}>
           {options}
           <option value="other">其他...</option>
         </select>);
@@ -130,7 +129,7 @@ export class SkillItem extends React.Component<Props, State> {
 
   constructor(props: Skill & Props) {
     super(props);
-    this.state = {skill: this.props.skill, selected: 0, mark: false};
+    this.state = {skill: this.props.skill};
   }
 
   render() {
@@ -138,8 +137,11 @@ export class SkillItem extends React.Component<Props, State> {
       return this.editing();
     }
     else {
+      const skill = this.props.skill;
+      const hasOccupation = (skill.occupation !== undefined && skill.occupation > 0) ? " hasOccupation" : "";
+      const hasGrowth = (skill.growth !== undefined && skill.growth > 0) ? " hasGrowth" : "";
       return (
-        <div className="SkillItem" onClick={this.startEdit}>
+        <div className={"SkillItem" + hasOccupation + hasGrowth} onClick={this.startEdit}>
           {this.label()}
           {this.props.skill.name ? <div>{this.props.skill.name}</div> : null}
           <div>{this.total()}</div>
@@ -177,7 +179,7 @@ export class SkillItem extends React.Component<Props, State> {
 
   private editing() {
     let label = null;
-    if (this.state.selected === "other") {
+    if (this.state.skill.selected === "other") {
       label = <input
         onChange={(e) => this.editSkill({label: e.currentTarget.value})}
         value={this.state.skill.label}
@@ -203,9 +205,9 @@ export class SkillItem extends React.Component<Props, State> {
       return initial;
     }
     else if (this.state.skill.contains !== undefined) {
-      const selected = this.state.selected;
+      const selected = this.state.skill.selected;
       if (selected === "other") return 0;
-      return this.state.skill.contains[selected].initial;
+      return this.state.skill.contains[selected === undefined ? 0 : selected].initial;
     }
     else {
       return this.props.skill.initial;
@@ -214,12 +216,15 @@ export class SkillItem extends React.Component<Props, State> {
 
   private subSkill(): null | SubSkill {
     const contains = this.props.skill.contains;
-    const selected = this.state.selected;
+    const selected = this.state.skill.selected;
     if (contains === undefined) {
       return null
     }
     else if (selected === "other") {
       return null
+    }
+    else if (selected === undefined) {
+      return contains[0];
     }
     else {
       return contains[selected];

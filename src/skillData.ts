@@ -14,6 +14,8 @@ export interface Skill {
   growth?: number;
   contains?: Array<SubSkill>;
   tag?: string;
+  mark?: boolean;
+  selected?: number | "other";
 }
 
 

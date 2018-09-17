@@ -81,6 +81,18 @@ export class SkillTable extends React.Component<Props, State> {
     />;
   }
 
+  totalSkillPoint(): { occupation: number, interest: number, growth: number } {
+    let occupation = 0;
+    let interest = 0;
+    let growth = 0;
+    for (let skill of this.state.skills.toArray()) {
+      if (skill.occupation !== undefined) occupation += skill.occupation;
+      if (skill.growth !== undefined) growth += skill.growth;
+      if (skill.interest !== undefined) interest += skill.interest;
+    }
+    return {occupation: occupation, growth: growth, interest: interest}
+  }
+
   render() {
     const skillList = this.state.skills
       .filter(this.isSkillMatch)
@@ -92,8 +104,11 @@ export class SkillTable extends React.Component<Props, State> {
         return m.localeCompare(n);
       });
 
+    const total = this.totalSkillPoint();
+
     return (
       <div className="SkillTable">
+        <div>已花费 {total.occupation} 职业点，{total.interest} 兴趣点</div>
         {this.skillFilter()}
         <div>{skillList}</div>
       </div>
