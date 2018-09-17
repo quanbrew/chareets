@@ -37,7 +37,7 @@ export class ItemList extends React.Component<Props, State> {
           <input type="text" value={this.state.current}
                  onChange={e => this.setState({current: e.currentTarget.value})}/>
           <button onClick={() => {
-            const current = this.state.current;
+            const current = this.state.current.trim();
             if (current !== "") {
               this.setState({current: "", items: this.state.items.push(current)});
             }

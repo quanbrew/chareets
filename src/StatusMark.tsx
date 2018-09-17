@@ -46,8 +46,11 @@ export class StatusMark extends React.Component<{}, State> {
       }
     }/>;
     const submit = <button onClick={() => {
-      const next = this.state.tags.push(this.state.current);
-      this.setState({current: "", tags: next});
+      const text = this.state.current.trim();
+      if (text !== "") {
+        const next = this.state.tags.push(this.state.current);
+        this.setState({current: "", tags: next});
+      }
     }}><FontAwesomeIcon icon={faPlus}/></button>;
 
     const tags = this.state.tags
