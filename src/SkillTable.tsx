@@ -1,20 +1,21 @@
 import * as React from 'react';
 import {List} from "immutable";
-import {Skill, skills} from "./skillData";
+import {Skill} from "./skillData";
 import {Props as SkillItemProps, SkillItem} from "./SkillItem";
 import {Attributes} from "./Sheet";
 import {div} from "./utils";
 import {Occupation} from "./Occupation";
-import NumberInput from "./fields/NumberInput";
+import {PointInput} from "./fields/PointInput";
 
 interface Props {
   attributes: Attributes;
+  skills: List<Skill>;
+  set: (skills: List<Skill>) => void;
 }
 
 
 interface State {
   filter: string;
-  skills: List<Skill>;
   editing: number | null;
 }
 
@@ -22,15 +23,16 @@ interface State {
 export class SkillTable extends React.Component<Props, State> {
   addSkill = (skill: Skill) => {
     if (skill.label !== "") {
-      // skill.name = "";
-      this.setState({skills: this.state.skills.push(skill), editing: null});
+      this.props.set(this.props.skills.push(skill));
+      this.setState({editing: null});
     }
   };
 
   editSkill = (index: number) => (skill: Skill) => {
     if (skill.label !== "") {
-      const nextList = this.state.skills.set(index, skill);
-      this.setState({skills: nextList, editing: null});
+      const nextList = this.props.skills.set(index, skill);
+      this.props.set(nextList);
+      this.setState({editing: null});
     }
   };
 
@@ -56,7 +58,7 @@ export class SkillTable extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
-    this.state = {filter: "", skills: List(skills), editing: null};
+    this.state = {filter: "", editing: null};
   }
 
   dispatch(skill: Skill, index: number) {
@@ -87,7 +89,7 @@ export class SkillTable extends React.Component<Props, State> {
     let occupation = 0;
     let interest = 0;
     let growth = 0;
-    for (let skill of this.state.skills.toArray()) {
+    for (let skill of this.props.skills.toArray()) {
       if (skill.occupation !== undefined) occupation += skill.occupation;
       if (skill.growth !== undefined) growth += skill.growth;
       if (skill.interest !== undefined) interest += skill.interest;
@@ -96,7 +98,7 @@ export class SkillTable extends React.Component<Props, State> {
   }
 
   render() {
-    const skillList = this.state.skills
+    const skillList = this.props.skills
       .filter(this.isSkillMatch)
       .toArray()
       .map((skill: Skill, index: number) => this.dispatch(skill, index))
@@ -107,11 +109,14 @@ export class SkillTable extends React.Component<Props, State> {
       });
 
     const total = this.totalSkillPoint();
+    const interestPoint = this.props.attributes.get("int", 0) * 2;
 
     return (
       <div className="SkillTable section">
         <Occupation/>
-        <div>已花费 {total.occupation}/<NumberInput/> 职业点，{total.interest}/{this.props.attributes.get("int", 0) * 2} 兴趣点
+        <div>
+          <span>职业点 {total.occupation}/<PointInput/></span>
+          <span>兴趣点 {total.interest}/{interestPoint}</span>
         </div>
         {this.skillFilter()}
         <div>{skillList}</div>

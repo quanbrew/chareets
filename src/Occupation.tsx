@@ -1,5 +1,6 @@
 import * as React from 'react';
-import NumberInput from "./fields/NumberInput";
+import {getId} from "./utils";
+import {PointInput} from "./fields/PointInput";
 
 
 interface State {
@@ -17,30 +18,31 @@ export class Occupation extends React.Component<{}, State> {
   }
 
   render() {
+    const occupationId = getId();
+    const remarkId = getId();
     return (
-      <div>
+      <div className="Occupation">
         <div>
-          <label>职业</label>
-          <input
-            value={this.state.name}
-            onChange={e => this.setState({name: e.currentTarget.value})}
-          />
+          <label htmlFor={occupationId}>职业</label>
+          <input value={this.state.name} id={occupationId}
+                 onChange={e => this.setState({name: e.currentTarget.value})}/>
         </div>
         <div>
           <label>信用等级范围</label>
-          <NumberInput
+          <PointInput
             value={this.state.credit_min}
             onChange={x => this.setState({credit_min: x})}
-          /> - <NumberInput
-          value={this.state.credit_max}
-          onChange={x => this.setState({credit_max: x})}
-        />
+          />
+          -
+          <PointInput
+            value={this.state.credit_max}
+            onChange={x => this.setState({credit_max: x})}
+          />
         </div>
         <div>
-          <textarea
-            value={this.state.remark}
-            onChange={(e) => this.setState({remark: e.currentTarget.value})}
-          />
+          <label htmlFor={remarkId}>职业备注</label>
+          <textarea value={this.state.remark} id={remarkId}
+                    onChange={(e) => this.setState({remark: e.currentTarget.value})}/>
         </div>
       </div>
     );

@@ -1,5 +1,5 @@
 import * as React from "react";
-import {randomIntFromInterval} from "../utils";
+import {getId, randomIntFromInterval} from "../utils";
 import NumberInput from "./NumberInput";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faDice} from "@fortawesome/free-solid-svg-icons";
@@ -88,20 +88,24 @@ function AgeHint(props: { age?: number }) {
 }
 
 
-export class AgeField extends React.PureComponent<Props> {
-  autoAge = (): number => Array.from(Array(4).keys())
+function randomAge(): number {
+  return Array.from(Array(4).keys())
     .map((): number => randomIntFromInterval(15, 90))
     .reduce((a, b) => Math.min(a, b), 100);
+}
 
+
+export class AgeField extends React.Component<Props> {
   public render() {
     const age = this.props.value;
+    const id = getId();
     return (
-      <div className="Attributes">
-        <label className="" htmlFor={this.props.name}>{this.props.label}</label>
-        <NumberInput value={this.props.value} id={this.props.name}
+      <div className="AgeField">
+        <label htmlFor={id}>{this.props.label}</label>
+        <NumberInput value={this.props.value} id={id}
                      onChange={this.props.set}
                      className=""/>
-        <button className="" onClick={() => this.props.set(this.autoAge())}>
+        <button onClick={() => this.props.set(randomAge())}>
           <FontAwesomeIcon icon={faDice}/>
         </button>
         <AgeHint age={age}/>

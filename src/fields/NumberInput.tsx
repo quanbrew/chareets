@@ -1,54 +1,59 @@
 import * as React from 'react';
+import cls from 'classnames';
 
-
-interface Props {
+export interface Props {
   id?: string;
   value?: number;
   onChange?: (x: number) => void;
   className?: string;
-  editable: boolean;
-  upper: number;
+  disable?: boolean;
+  upper?: number;
 }
 
 
-export class NumberInput extends React.PureComponent<Props, number> {
-  public static defaultProps: Partial<Props> = {
-    editable: true,
-    upper: 1e21 - 1,
-  };
+interface State {
+  cleared: boolean
+}
+
+
+export class NumberInput extends React.PureComponent<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {cleared: false}
+  }
+
 
   render() {
     const id = this.props.id;
-    const update = (v: string) => {
-      if (/^\d+$/.test(v)) {
-        const number = Number(v);
-        if (
-          this.props.editable &&
-          this.props.onChange !== undefined &&
-          !isNaN(number) &&
-          number <= this.props.upper
-        ) {
-          this.props.onChange(Number(v));
-        }
+    const upper = this.props.upper !== undefined ? this.props.upper : 20000000;
+    const editable = this.props.disable !== true;
+    const className = cls("NumberInput", this.props.className);
+
+    const update = (inputted: string) => {
+      const onChange = this.props.onChange !== undefined ? this.props.onChange : () => {
+      };
+      const isNumeric = /^\d+$/.test(inputted);
+
+      if (isNumeric) {
+        const number = Number(inputted);
+        if (editable && !isNaN(number) && number <= upper) onChange(number);
       }
-      else if (v == "" && this.props.onChange !== undefined) {
-        this.props.onChange(0);
+      else if (inputted == "") {
+        this.setState({cleared: true});
+        onChange(0);
       }
     };
+
     return (
-      <input id={id} type="number" className={this.props.className}
-             disabled={!this.props.editable} value={this.value()}
+      <input id={id} type="number" className={className}
+             disabled={!editable} value={this.value()}
              onChange={(e) => update(e.currentTarget.value)}
       />);
   }
 
   private value(): string {
-    if (this.props.value === undefined) {
-      return ""
-    }
-    else {
-      return this.props.value.toFixed()
-    }
+    const value = this.props.value;
+    return value === undefined || (value === 0 && this.state.cleared) ? "" : value.toFixed();
   }
 }
 

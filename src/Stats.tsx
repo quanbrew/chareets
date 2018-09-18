@@ -3,11 +3,12 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faDice, faGraduationCap} from "@fortawesome/free-solid-svg-icons";
 import NumberInput from './fields/NumberInput';
 import {div, roll} from "./utils";
-import {StatusItem} from "./StatusItem";
+import {StatusField} from "./fields/StatusField";
 import {StatusMark} from "./StatusMark";
-import {Attributes} from "./Sheet";
+import {Attributes, SheetContext, SheetData} from "./Sheet";
 import {AttributeField as Field} from "./fields/AttributeField";
 import {ageAffect, AgeField} from "./fields/AgeField";
+import {Skill} from "./skillData";
 
 
 interface Props {
@@ -205,7 +206,7 @@ class Hp extends React.Component<Props> {
 
   render() {
     const hp = Hp.upperLimit(this.props.attributes);
-    return <StatusItem label="HP" upper={hp}/>;
+    return <StatusField label="HP" upper={hp}/>;
   }
 }
 
@@ -223,19 +224,37 @@ class Mp extends React.Component<Props> {
 
   render() {
     const mp = Mp.upperLimit(this.props.attributes);
-    return <StatusItem label="MP" upper={mp}/>;
+    return <StatusField label="MP" upper={mp}/>;
   }
 }
 
 
 class San extends React.Component<Props> {
-  static upperLimit(attr: Attributes): number | undefined {
+  static initial(attr: Attributes): number | undefined {
     return attr.get("pow");
   }
 
   render() {
-    const san = San.upperLimit(this.props.attributes);
-    return <StatusItem label="SAN" upper={san}/>;
+    const attr = this.props.attributes;
+    return (
+      <SheetContext.Consumer>{
+        (state: SheetData) => {
+          const upper = 99;
+          const mythos: number = state.skills
+            .filter((skill: Skill) => skill.name === "Cthulhu Mythos")
+            .toArray()
+            .reduce((x: number, skill: Skill) => skill.growth === undefined ? 0 : skill.growth, 0);
+          return (
+            <StatusField
+              label="SAN"
+              upper={upper - mythos}
+              initial={San.initial(attr)}
+            />
+          );
+        }
+      }</SheetContext.Consumer>
+
+    );
   }
 }
 
@@ -266,10 +285,10 @@ export class Stats extends React.Component<Props> {
       });
 
     return (
-      <div className="section Stats">
+      <div className="Stats section">
+        <AgeField label="年龄" {...name("age")} upper={99}/>
+        <AutoRoll {...this.props}/>
         <div>
-          <AgeField label="年龄" {...name("age")} upper={99}/>
-          <AutoRoll {...this.props}/>
           <Field label="力量" {...name("str")} upper={99}/>
           <Field label="体质" {...name("con")} upper={99}/>
           <Field label="体型" {...name("siz")}/>
@@ -278,10 +297,10 @@ export class Stats extends React.Component<Props> {
           <Field label="智力" {...name("int")} upper={99}/>
           <Field label="意志" {...name("pow")}/>
           <Field label="教育" {...name("edu")} upper={99}><EduEnhance {...this.props}/></Field>
-          <Sum {...this.props}/>
-          <Field label="幸运" {...name("luck")} upper={99}/>
-          {affect.type === "Young" && luck2 !== undefined ? <p>已投两次幸运取大值（较小 {luck2}）。</p> : null}
         </div>
+        <Sum {...this.props}/>
+        <Field label="幸运" {...name("luck")} upper={99}/>
+        {affect.type === "Young" && luck2 !== undefined ? <div>已投两次幸运取大值（较小 {luck2}）。</div> : null}
         <StatusMark/>
         <div className="other-attributes">
           <Hp {...this.props}/>

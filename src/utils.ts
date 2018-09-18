@@ -13,3 +13,7 @@ export function roll(n: number = 1, face: number = 100): Array<number> {
   crypto.getRandomValues(array);
   return Array.from(array).map(Number).map(x => (x % face + 1));
 }
+
+export function getId() {
+  return Math.random().toString(36).substring(7);
+}

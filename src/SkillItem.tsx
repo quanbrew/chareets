@@ -3,8 +3,8 @@ import * as React from "react";
 import {SyntheticEvent} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCodeBranch, faDesktop, faPlusSquare, faSave, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
-import NumberInput from "./fields/NumberInput";
 import {faPagelines} from "@fortawesome/free-brands-svg-icons";
+import {PointInput} from "./fields/PointInput";
 
 
 export interface Props {
@@ -38,37 +38,37 @@ export class SkillItem extends React.Component<Props, State> {
 
     const initial = (<div>
       <label htmlFor="skill-initial">初始</label>
-      <NumberInput
+      <PointInput
         id="skill-initial"
         value={this.initial()}
-        editable={!disableInitial}
+        disable={disableInitial}
         onChange={x => this.editSkill({initial: x})}
       />
     </div>);
     const occupation = (<div>
       <label htmlFor="skill-occupation">职业</label>
-      <NumberInput
+      <PointInput
         id="skill-occupation"
         value={this.state.skill.occupation}
-        editable={!disableOccupation}
+        disable={disableOccupation}
         onChange={x => this.editSkill({occupation: x})}
       />
     </div>);
     const interest = (<div>
       <label htmlFor="skill-interest">兴趣</label>
-      <NumberInput
+      <PointInput
         id="skill-interest"
         value={this.state.skill.interest}
-        editable={!disableInterest}
+        disable={disableInterest}
         onChange={x => this.editSkill({interest: x})}
       />
     </div>);
     const growth = (<div>
       <label htmlFor="skill-growth">成长</label>
-      <NumberInput
+      <PointInput
         id="skill-growth"
         value={this.state.skill.growth}
-        editable={!disableGrowth}
+        disable={disableGrowth}
         onChange={x => this.editSkill({growth: x})}
       />
       {isCthulhuMythos || isCreditRating ? null : (

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {Map} from "immutable";
 
 
 interface FieldProps {
@@ -21,51 +22,34 @@ function Field(props: FieldProps) {
 
 
 interface State {
-  personalDescription: string,
-  ideologyOrBeliefs: string,
-  significantPeople: string,
-  meaningfulLocations: string,
-  treasuredPossessions: string,
-  traits: string,
-  injuriesAndScars: string,
-  phobiasAndManias: string,
-  other: string
+  backstory: Map<string, string>
 }
 
 
 export class Backstory extends React.Component<{}, State> {
   constructor(props: {}) {
     super(props);
-    this.state = {
-      personalDescription: "",
-      ideologyOrBeliefs: "",
-      significantPeople: "",
-      meaningfulLocations: "",
-      treasuredPossessions: "",
-      traits: "",
-      injuriesAndScars: "",
-      phobiasAndManias: "",
-      other: ""
-    };
+    this.state = {backstory: Map()};
   }
 
 
   render() {
-    const make = (name: keyof State, label: string) =>
-      <Field
-        value={this.state[name]} label={label} name={name}
-        onChange={(s: string) => this.setState((prev: State) => ({...prev, [name]: s}))}
-      />;
+    const name = (name: string) => ({
+      value: this.state[name],
+      name: name,
+      onChange: (value: string) =>
+        this.setState({backstory: this.state.backstory.set(name, value)})
+    });
     return (
-      <div className="section Backstory">
-        {make("personalDescription", "个人描述")}
-        {make("ideologyOrBeliefs", "思想/信念")}
-        {make("significantPeople", "重要之人")}
-        {make("meaningfulLocations", "意义非凡之地")}
-        {make("treasuredPossessions", "宝贵之物")}
-        {make("traits", "特质")}
-        {make("injuriesAndScars", "伤口与疤痕")}
-        {make("phobiasAndManias", "恐惧症和狂躁症")}
+      <div className="Backstory section">
+        <Field label="个人描述" {...name("personalDescription")}/>
+        <Field label="思想/信念" {...name("ideologyOrBeliefs")}/>
+        <Field label="重要之人" {...name("significantPeople")}/>
+        <Field label="意义非凡之地" {...name("meaningfulLocations")}/>
+        <Field label="宝贵之物" {...name("treasuredPossessions")}/>
+        <Field label="特质" {...name("traits")}/>
+        <Field label="伤口与疤痕" {...name("injuriesAndScars")}/>
+        <Field label="恐惧症和狂躁症" {...name("phobiasAndManias")}/>
       </div>
     );
   }

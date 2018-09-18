@@ -1,5 +1,7 @@
 import * as React from "react";
-import NumberInput from "./NumberInput";
+import {getId} from "../utils";
+import cls from "classnames";
+import {PointInput} from "./PointInput";
 
 export interface Props {
   label: string;
@@ -15,20 +17,20 @@ export class AttributeField extends React.PureComponent<Props> {
   public render() {
     const label = this.props.label;
     const value = this.props.value;
-    const id = this.props.name;
+    const id = getId();
     const set = this.props.set;
     const upper = this.props.upper;
-    let hint = this.props.hint;
-    if (hint === undefined && upper !== undefined && value !== undefined && value > upper) {
-      hint = <span>{label}最多{upper}</span>;
-    }
+    const name = this.props.name.toLocaleUpperCase();
+    const outOfRange = upper !== undefined && value !== undefined && value > upper;
+    const className = cls("AttributeField", `attr-${name}`, {"out-of-range": outOfRange});
+    const hint = this.props.hint;
     return (
-      <div className="">
-        <label className="" htmlFor={id}>{label}<span>{id.toLocaleUpperCase()}</span></label>
-        <NumberInput value={value} onChange={set} id={id}
-                     className="number-field characteristics-field"/>
+      <div className={className}>
+        <label htmlFor={id}><span>{label}</span><span>{name}</span></label>
+        <PointInput value={value} onChange={set} id={id}/>
         {this.props.children}
-        <p className="help">{hint}</p>
-      </div>)
+        {hint !== undefined ? <div className="help">{hint}</div> : null}
+      </div>
+    );
   }
 }

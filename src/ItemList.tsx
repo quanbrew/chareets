@@ -24,11 +24,14 @@ export class ItemList extends React.Component<Props, State> {
   }
 
   render() {
-    const mapper = (gear: string, id: number) => (
-      <li key={id}>{gear}
-        <button onClick={() => this.setState({items: this.state.items.remove(id)})}>
-          <FontAwesomeIcon icon={faTrash}/>
-        </button>
+    const mapper = (item: string, id: number) => (
+      <li key={id}>
+        <div>{item}</div>
+        <div>
+          <button onClick={() => this.setState({items: this.state.items.remove(id)})}>
+            <FontAwesomeIcon icon={faTrash}/>
+          </button>
+        </div>
       </li>
     );
     return (

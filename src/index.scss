@@ -1,111 +1,112 @@
 @charset "utf-8";
-
-$bg-color: #FFFFFF;
-$line-color: #555555;
-$text-color: #000000;
-
+//
+//$bg-color: #FFFFFF;
+//$line-color: #555555;
+//$text-color: #000000;
+//
 * {
   box-sizing: border-box;
 }
 
-body {
-  font-size: 14px;
-}
-
-.section {
-  padding: 2rem;
-  margin-bottom: 1rem;
-  background-color: $bg-color;
-  border-bottom: 1px solid $line-color;
-}
-
-.Sheet {
-  label {
-    margin-right: 0.5em;
-  }
-
-  textarea {
-    width: 100%;
-    height: 5em;
-  }
-}
-
-.Sheet-header {
-  background-color: darken($bg-color, 10%);
-
-  .Sheet-logo {
-    width: 4rem;
-  }
-
-  h1 {
-    display: inline-block;
-    margin: 0;
-  }
-}
-
-.SkillTable {
-  .SkillItem {
-    color: lighten($text-color, 60%);
-    display: inline-block;
-    box-shadow: 0 0 3px #555555;
-
-    width: 15rem;
-    height: 6rem;
-    margin: 0.5rem;
-    > div {
-      padding: 1em;
-    }
-    &:hover {
-      color: $text-color;
-    }
-    .total {
-      font-size: 2rem;
-      text-align: right;
-      &::after {
-        content: "%";
-        font-size: 1rem;
-      }
-    }
-    .skill-label {
-      svg {
-        margin: 0 0.35em 0;
-      }
-      font-size: 120%;
-      margin: 0 0 0.4em 0;
-    }
-  }
-  .editing {
-    color: $text-color;
-    position: absolute;
-    background-color: $bg-color;
-    width: 15rem;
-    padding: 2rem;
-    //font-size: 1.25em;
-    border: 0.2rem solid $line-color;
-    box-shadow: 1px 1px 5px black;
-  }
-  .hasOccupation {
-    color: $text-color;
-  }
-  .hasGrowth {
-    color: $text-color;
-  }
-  .hasInterest {
-    color: $text-color;
-  }
-}
-
-.Avatar {
-  .avatar-drop {
-    margin: 0 auto;
-    text-align: center;
-    background-color: darken($bg-color, 10%);
-    .help {
-      padding: 3em 0;
-      font-size: 1.5em;
-    }
-  }
-  .tool {
-    text-align: center;
-  }
-}
+//
+//body {
+//  font-size: 14px;
+//}
+//
+//.section {
+//  padding: 2rem;
+//  margin-bottom: 1rem;
+//  background-color: $bg-color;
+//  border-bottom: 1px solid $line-color;
+//}
+//
+//.Sheet {
+//  label {
+//    margin-right: 0.5em;
+//  }
+//
+//  textarea {
+//    width: 100%;
+//    height: 5em;
+//  }
+//}
+//
+//.Sheet-header {
+//  background-color: darken($bg-color, 10%);
+//
+//  .Sheet-logo {
+//    width: 4rem;
+//  }
+//
+//  h1 {
+//    display: inline-block;
+//    margin: 0;
+//  }
+//}
+//
+//.SkillTable {
+//  .SkillItem {
+//    color: lighten($text-color, 60%);
+//    display: inline-block;
+//    box-shadow: 0 0 3px #555555;
+//
+//    width: 15rem;
+//    height: 6rem;
+//    margin: 0.5rem;
+//    > div {
+//      padding: 1em;
+//    }
+//    &:hover {
+//      color: $text-color;
+//    }
+//    .total {
+//      font-size: 2rem;
+//      text-align: right;
+//      &::after {
+//        content: "%";
+//        font-size: 1rem;
+//      }
+//    }
+//    .skill-label {
+//      svg {
+//        margin: 0 0.35em 0;
+//      }
+//      font-size: 120%;
+//      margin: 0 0 0.4em 0;
+//    }
+//  }
+//  .editing {
+//    color: $text-color;
+//    position: absolute;
+//    background-color: $bg-color;
+//    width: 15rem;
+//    padding: 2rem;
+//    //font-size: 1.25em;
+//    border: 0.2rem solid $line-color;
+//    box-shadow: 1px 1px 5px black;
+//  }
+//  .hasOccupation {
+//    color: $text-color;
+//  }
+//  .hasGrowth {
+//    color: $text-color;
+//  }
+//  .hasInterest {
+//    color: $text-color;
+//  }
+//}
+//
+//.Avatar {
+//  .avatar-drop {
+//    margin: 0 auto;
+//    text-align: center;
+//    background-color: darken($bg-color, 10%);
+//    .help {
+//      padding: 3em 0;
+//      font-size: 1.5em;
+//    }
+//  }
+//  .tool {
+//    text-align: center;
+//  }
+//}

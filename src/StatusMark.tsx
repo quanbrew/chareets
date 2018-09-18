@@ -1,7 +1,9 @@
 import * as React from 'react';
+import {SyntheticEvent} from 'react';
 import {List} from "immutable";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {getId} from "./utils";
 
 
 interface TagProps {
@@ -25,26 +27,30 @@ interface State {
 
 
 export class StatusMark extends React.Component<{}, State> {
+  handleInput = (e: SyntheticEvent<HTMLInputElement>) =>
+    this.setState({current: e.currentTarget.value});
+
   constructor(props: {}) {
     super(props);
-    // physical_normal: "身体正常",
-    // psychological_normal: "心理正常",
-    // insanity_indefinite: "不定时疯狂",
-    // insanity_permanent: "永久疯狂",
-    // insanity_temporary: "临时疯狂",
-    // major_wound: "重伤",
-    // dying: "濒死",
-    // dead: "死亡"
     this.state = {tags: List(["身体正常", "心理正常", "非神话相信者"]), current: ""}
   }
 
-
   render() {
-    const input = <input type="text" value={this.state.current} onChange={
-      (e) => {
-        this.setState({current: e.currentTarget.value})
-      }
-    }/>;
+    const dataId = getId();
+    const input = (<input type="text" list={dataId} value={this.state.current} onChange={this.handleInput}/>);
+    const data = (
+      <datalist id={dataId}>
+        <option value="身体正常"/>
+        <option value="心理正常"/>
+        <option value="不定时疯狂"/>
+        <option value="永久疯狂"/>
+        <option value="临时疯狂"/>
+        <option value="重伤"/>
+        <option value="濒死"/>
+        <option value="死亡"/>
+        <option value="神话相信者"/>
+      </datalist>
+    );
     const submit = <button onClick={() => {
       const text = this.state.current.trim();
       if (text !== "") {
@@ -64,7 +70,7 @@ export class StatusMark extends React.Component<{}, State> {
       <div className="StatusMark">
         <strong>状态与备注</strong>
         <ul>{tags}</ul>
-        <div>{input}{submit}</div>
+        <div>{input}{data}{submit}</div>
       </div>
     );
   }
