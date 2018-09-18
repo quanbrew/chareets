@@ -40,7 +40,8 @@ export class Avatar extends React.Component<{}, State> {
     return (
       <div className="Avatar">
         <Dropzone onDrop={this.handleDrop} disableClick={avatar !== undefined}
-                  className="avatar-drop" style={{width: `${zone_size}px`, height: `${zone_size}px`}}>
+                  className="avatar-drop" accept="image/*"
+                  style={{width: `${zone_size}px`, height: `${zone_size}px`}}>
           {avatar !== undefined ?
             (<AvatarEditor image={avatar} width={size} height={size} border={border}
                            color={color} scale={scale} rotate={0}/>) :
