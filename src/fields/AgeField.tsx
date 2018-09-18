@@ -95,10 +95,15 @@ function randomAge(): number {
 }
 
 
-export class AgeField extends React.Component<Props> {
+export class AgeField extends React.Component<Props, { id: string }> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {id: getId()};
+  }
+
   public render() {
     const age = this.props.value;
-    const id = getId();
+    const id = this.state.id;
     return (
       <div className="AgeField">
         <label htmlFor={id}>{this.props.label}</label>

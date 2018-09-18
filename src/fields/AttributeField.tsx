@@ -13,11 +13,16 @@ export interface Props {
 }
 
 
-export class AttributeField extends React.PureComponent<Props> {
+export class AttributeField extends React.PureComponent<Props, { id: string }> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {id: getId()};
+  }
+
   public render() {
     const label = this.props.label;
     const value = this.props.value;
-    const id = getId();
+    const id = this.state.id;
     const set = this.props.set;
     const upper = this.props.upper;
     const name = this.props.name.toLocaleUpperCase();

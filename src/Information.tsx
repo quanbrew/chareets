@@ -1,28 +1,7 @@
 import * as React from 'react';
 import {Map} from "immutable";
 import {Avatar} from "./Avatar";
-import {getId} from "./utils";
-
-
-interface FieldProps {
-  label: string;
-  value: string;
-  set: (value: string) => void;
-}
-
-
-class Field extends React.PureComponent<FieldProps, {}> {
-  render() {
-    const id = getId();
-    const value = this.props.value;
-    return (
-      <div>
-        <label htmlFor={id}>{this.props.label}</label>
-        <input value={value} id={id} onChange={e => this.props.set(e.currentTarget.value)}/>
-      </div>
-    )
-  }
-}
+import {InformationField as Field} from "./fields/InformationField";
 
 
 interface Props {

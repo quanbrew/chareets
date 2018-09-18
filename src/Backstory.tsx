@@ -1,25 +1,6 @@
 import * as React from 'react';
 import {Map} from "immutable";
-
-
-interface FieldProps {
-  value: string,
-  label: string,
-  name: string,
-  onChange: (next: string) => void;
-}
-
-
-function Field(props: FieldProps) {
-  const label = <label htmlFor={props.name}>{props.label}</label>;
-  const input = <textarea value={props.value} id={props.name}
-                          onChange={e => props.onChange(e.currentTarget.value)}/>;
-  return <div>
-    <div>{label}</div>
-    <div>{input}</div>
-  </div>
-}
-
+import {BackstoryField as Field} from "./fields/BackstoryField";
 
 interface State {
   backstory: Map<string, string>

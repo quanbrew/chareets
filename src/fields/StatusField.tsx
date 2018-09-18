@@ -1,6 +1,7 @@
 import * as React from 'react';
 import NumberInput from "./NumberInput";
 import cls from "classnames";
+import {getId} from "../utils";
 
 interface Props {
   label: string;
@@ -10,6 +11,7 @@ interface Props {
 
 
 interface State {
+  id: string;
   value?: number;
   edited: boolean;
 }
@@ -21,13 +23,14 @@ export class StatusField extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
-    this.state = {value: props.upper, edited: false};
+    this.state = {value: props.upper, edited: false, id: getId()};
   }
 
   render() {
     const upper = this.props.upper;
     const value = this.state.value;
     const label = this.props.label;
+    const id = this.state.id;
     const upperLimit = <span> / {upper === undefined ? "?" : upper}</span>;
     const initial = this.props.initial;
     const initialValue = initial !== undefined ? initial : upper;
@@ -36,8 +39,8 @@ export class StatusField extends React.Component<Props, State> {
 
     return (
       <div className={cls("StatusField", {"out-of-range": outOfRange})}>
-        <label htmlFor={label}>{label}</label>
-        <NumberInput value={this.state.edited ? value : initialValue} onChange={this.handleChange} id={label}
+        <label htmlFor={id}>{label}</label>
+        <NumberInput value={this.state.edited ? value : initialValue} onChange={this.handleChange} id={id}
                      className="input"/>
         {upperLimit}
       </div>

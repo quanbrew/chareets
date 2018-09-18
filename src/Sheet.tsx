@@ -12,17 +12,6 @@ import {Skill, skills} from "./skillData";
 
 export type Attributes = Map<string, number>;
 
-// export const characteristics = {
-//   "dex": "敏捷",
-//   "app": "外貌",
-//   "str": "力量",
-//   "int": "智力",
-//   "siz": "体型",
-//   "con": "体质",
-//   "edu": "教育",
-//   "pow": "意志"
-// };
-
 export class SheetData {
   attributes: Map<string, number>;
   information: Map<string, string>;
