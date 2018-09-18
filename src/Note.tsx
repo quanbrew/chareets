@@ -1,8 +1,10 @@
 import * as React from 'react';
 import {SyntheticEvent} from 'react';
+import {getId} from "./utils";
 
 
 interface State {
+  id: string;
   value: string;
 }
 
@@ -13,14 +15,16 @@ export class Note extends React.Component<{}, State> {
 
   constructor(props: {}) {
     super(props);
-    this.state = {value: ""};
+    this.state = {value: "", id: getId()};
   }
 
   render() {
     return (
-      <div>
-        <p>调查员笔记</p>
-        <textarea value={this.state.value} onChange={this.handleChange}/>
+      <div className="container">
+        <div className="field">
+          <label className="label" htmlFor={this.state.id}>调查员笔记</label>
+          <textarea className="textarea" value={this.state.value} id={this.state.id} onChange={this.handleChange}/>
+        </div>
       </div>
     );
   }

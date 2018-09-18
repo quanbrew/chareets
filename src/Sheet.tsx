@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {List, Map} from 'immutable';
 
-import logo from './logo.svg';
 import {Information} from './Information';
 import {Stats} from './Stats';
 import {SkillTable} from "./SkillTable";
@@ -43,27 +42,40 @@ class Sheet extends React.Component<{}, SheetData> {
   }
 
   public render() {
+    const playerName = this.state.information.get("name", "不知名的冒险者");
     return (
       <SheetContext.Provider value={this.state}>
         <div className="Sheet">
-          <header className="Sheet-header section">
-            <img src={logo} className="Sheet-logo" alt="logo"/>
-            <p>欢迎你，{this.state.information.get("name", "不知名的冒险者")}</p>
+          <header className="Sheet-header hero is-primary is-bold">
+            <div className="hero-body">
+              <div className="container">
+                <h1 className="title">Chareets</h1>
+                <p className="subtitle">欢迎你，{playerName}</p>
+              </div>
+            </div>
           </header>
 
-          <Information information={this.state.information} set={this.setInformation}/>
-          <Stats attributes={this.state.attributes} set={this.setAttributes}/>
+          <section className="section">
+            <Information information={this.state.information} set={this.setInformation}/>
+          </section>
 
-          <SkillTable skills={this.state.skills} set={this.setSkills} attributes={this.state.attributes}/>
+          <section className="section">
+            <Stats attributes={this.state.attributes} set={this.setAttributes}/>
+          </section>
+          <section className="section">
+            <SkillTable skills={this.state.skills} set={this.setSkills} attributes={this.state.attributes}/>
+          </section>
 
-          <Backstory/>
-          <div className="section">
-            <div>
+          <section className="section">
+            <Backstory/>
+          </section>
+          <section className="section">
+            <div className="container">
               <p>随身物品</p>
               <ItemList/>
             </div>
             <Note/>
-          </div>
+          </section>
         </div>
       </SheetContext.Provider>
     );

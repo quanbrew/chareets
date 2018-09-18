@@ -2,7 +2,7 @@ import * as React from 'react';
 import {SyntheticEvent} from 'react';
 import {List} from "immutable";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import {getId} from "./utils";
 
 
@@ -14,8 +14,8 @@ interface TagProps {
 
 class Tag extends React.Component<TagProps> {
   render() {
-    const remove = <button onClick={this.props.remove}><FontAwesomeIcon icon={faTrash}/></button>;
-    return (<li><span>{this.props.text}</span>{remove}</li>)
+    const remove = <button className="delete is-small" onClick={this.props.remove}/>;
+    return (<span className="tag is-medium">{this.props.text}{remove}</span>)
   }
 }
 
@@ -37,7 +37,8 @@ export class StatusMark extends React.Component<{}, State> {
 
   render() {
     const dataId = getId();
-    const input = (<input type="text" list={dataId} value={this.state.current} onChange={this.handleInput}/>);
+    const input = (
+      <input type="text" className="input" list={dataId} value={this.state.current} onChange={this.handleInput}/>);
     const data = (
       <datalist id={dataId}>
         <option value="身体正常"/>
@@ -51,7 +52,7 @@ export class StatusMark extends React.Component<{}, State> {
         <option value="神话相信者"/>
       </datalist>
     );
-    const submit = <button onClick={() => {
+    const submit = <button className="button" onClick={() => {
       const text = this.state.current.trim();
       if (text !== "") {
         const next = this.state.tags.push(this.state.current);
@@ -68,9 +69,12 @@ export class StatusMark extends React.Component<{}, State> {
       );
     return (
       <div className="StatusMark">
-        <strong>状态与备注</strong>
-        <ul>{tags}</ul>
-        <div>{input}{data}{submit}</div>
+        <ul className="tags">{tags}</ul>
+        <div className="field has-addons">
+          {data}
+          <div className="control">{input}</div>
+          <div className="control">{submit}</div>
+        </div>
       </div>
     );
   }

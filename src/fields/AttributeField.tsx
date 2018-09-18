@@ -27,12 +27,13 @@ export class AttributeField extends React.PureComponent<Props, { id: string }> {
     const upper = this.props.upper;
     const name = this.props.name.toLocaleUpperCase();
     const outOfRange = upper !== undefined && value !== undefined && value > upper;
-    const className = cls("AttributeField", `attr-${name}`, {"out-of-range": outOfRange});
+    const className = cls("AttributeField", `attr-${name}`, {"out-of-range": outOfRange}, "field");
+    const inputClassName = cls("input", "is-small", {"is-danger": outOfRange});
     const hint = this.props.hint;
     return (
       <div className={className}>
-        <label htmlFor={id}><span>{label}</span><span>{name}</span></label>
-        <PointInput value={value} onChange={set} id={id}/>
+        <label className="label is-small" htmlFor={id} title={name}><span>{label}</span></label>
+        <div className="control"><PointInput className={inputClassName} value={value} onChange={set} id={id}/></div>
         {this.props.children}
         {hint !== undefined ? <div className="help">{hint}</div> : null}
       </div>

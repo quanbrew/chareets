@@ -8,6 +8,7 @@
     "@fortawesome/free-regular-svg-icons": "^5.1.0-11",
     "@fortawesome/free-solid-svg-icons": "^5.1.0-11",
     "@fortawesome/react-fontawesome": "^0.1.0-11",
+    "bulma": "^0.7.1",
     "classnames": "^2.2.6",
     "immutable": "^3.8.2",
     "lodash": "^4.17.10",

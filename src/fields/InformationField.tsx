@@ -18,9 +18,12 @@ export class InformationField extends React.PureComponent<Props, { id: string }>
     const id = this.state.id;
     const value = this.props.value;
     return (
-      <div>
-        <label htmlFor={id}>{this.props.label}</label>
-        <input value={value} id={id} onChange={e => this.props.set(e.currentTarget.value)}/>
+      <div className="field">
+        <label className="label" htmlFor={id}>{this.props.label}</label>
+        <div className="control">
+          <input className="input is-small" value={value} id={id}
+                 onChange={e => this.props.set(e.currentTarget.value)}/>
+        </div>
       </div>
     )
   }

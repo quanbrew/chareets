@@ -18,10 +18,12 @@ export class BackstoryField extends React.Component<Props, { id: string }> {
   render() {
     const id = this.state.id;
     return (
-      <div>
-        <div><label htmlFor={id}>{this.props.label}</label></div>
-        <div><textarea value={this.props.value} id={id}
-                       onChange={e => this.props.onChange(e.currentTarget.value)}/></div>
+      <div className="field">
+        <div><label className="label" htmlFor={id}>{this.props.label}</label></div>
+        <div className="control">
+          <textarea value={this.props.value} id={id} className="textarea"
+                    onChange={e => this.props.onChange(e.currentTarget.value)}/>
+        </div>
       </div>
     );
   }

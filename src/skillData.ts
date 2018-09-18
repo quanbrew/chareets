@@ -38,7 +38,7 @@ export const skills: Array<Skill> = [
   // initial value equals DEX/2, hardcoded in `SkillTable`
   {label: "闪避", name: "Dodge", initial: undefined},
   // initial value equals EDU, hardcoded in `SkillTable`
-  {label: "语言（母语）", name: "Language (Own)", initial: undefined, tag: "blank", contains: languages},
+  {label: "母语", name: "Language (Own)", initial: undefined, tag: "blank", contains: languages},
   {label: "心理学", name: "Psychology", initial: 10},
   {label: "信用评级", name: "Credit Rating", initial: 0},
   {label: "话术", name: "Fast Talk", initial: 5},

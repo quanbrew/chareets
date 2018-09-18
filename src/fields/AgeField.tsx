@@ -70,14 +70,14 @@ function AgeHint(props: { age?: number }) {
 
   const affect = ageAffect(props.age);
   if (affect.type === "OutRange") {
-    return <div>超出可选范围，请与守密人协商。</div>;
+    return <div className="help">超出可选范围，请与守密人协商。</div>;
   }
   else if (affect.type === "Young") {
-    return <div>力量和体型合计减 5 点。教育减 5 点。 决定幸运值时可以骰 2 次并取较好的一次。</div>;
+    return <div className="help">力量和体型合计减 5 点。教育减 5 点。 决定幸运值时可以骰 2 次并取较好的一次。</div>;
   }
   else if (affect.type === "Normal") {
     return (
-      <div>
+      <div className="help">
         {affect.eduEnhance === 0 ? null : <span>对教育进行 {affect.eduEnhance} 次增强检定。</span>}
         {affect.multiDeduct === 0 ? null : <span>力量体质敏捷合计减 {affect.multiDeduct}。</span>}
         {affect.appDeduct === 0 ? null : <span>外貌减 {affect.appDeduct} 点。</span>}
@@ -105,14 +105,21 @@ export class AgeField extends React.Component<Props, { id: string }> {
     const age = this.props.value;
     const id = this.state.id;
     return (
-      <div className="AgeField">
-        <label htmlFor={id}>{this.props.label}</label>
-        <NumberInput value={this.props.value} id={id}
-                     onChange={this.props.set}
-                     className=""/>
-        <button onClick={() => this.props.set(randomAge())}>
-          <FontAwesomeIcon icon={faDice}/>
-        </button>
+      <div className="AgeField field">
+        <label className="label" htmlFor={id}>{this.props.label}</label>
+        <div className="field has-addons">
+          <div className="control">
+            <NumberInput value={this.props.value} id={id}
+                         onChange={this.props.set}
+                         className="input is-small"/>
+          </div>
+          <div className="control">
+            <button className="button is-small" onClick={() => this.props.set(randomAge())}>
+              <FontAwesomeIcon icon={faDice}/>
+            </button>
+          </div>
+        </div>
+
         <AgeHint age={age}/>
       </div>
     )

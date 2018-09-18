@@ -53,11 +53,10 @@ class AutoRoll extends React.Component<Props> {
   render() {
     const times = this.props.attributes.get(AutoRoll.KEY, 0);
     return (
-      <div>
-        <button onClick={this.autoRoll}>
-          <FontAwesomeIcon icon={faDice}/>属性
+      <div className="control">
+        <button className="button" onClick={this.autoRoll}>
+          <FontAwesomeIcon icon={faDice}/>{times > 0 ? <span>已投 {times} 次</span> : <span>随机属性</span>}
         </button>
-        {times > 1 ? <span>已roll {times} 次</span> : null}
       </div>
     );
   }
@@ -81,9 +80,12 @@ class EduEnhance extends React.Component<Props> {
 
   render() {
     const count = this.props.attributes.get(EduEnhance.KEY, 0);
-    return (<div>
-      <button onClick={this.eduEnhance}><FontAwesomeIcon icon={faGraduationCap}/>增强检定</button>
-      {this.shouldEnhanceTimes()}{count > 0 ? <span>已增强 {count} 次</span> : null}
+    const shouldTimes = this.shouldEnhanceTimes();
+    const num = shouldTimes !== null ? (<span>: {count}/{shouldTimes}</span>) : null;
+    return (<div className="control">
+      <a className="button" onClick={this.eduEnhance}>
+        <FontAwesomeIcon icon={faGraduationCap}/> 教育增强检定 {num}
+      </a>
     </div>);
   }
 
@@ -92,8 +94,7 @@ class EduEnhance extends React.Component<Props> {
     if (age === undefined) return null;
     const affect = ageAffect(age);
     if (affect.type === "Normal") {
-      const times = affect.eduEnhance;
-      return <span>需要增强 {times} 次 </span>;
+      return affect.eduEnhance;
     }
     else return null;
   }
@@ -110,9 +111,13 @@ class AppDeduct extends React.Component<Props> {
     if (affect.type !== "Normal" || affect.appDeduct === 0 || app === undefined)
       return null;
     const sub = affect.appDeduct;
-    return <button onClick={() => {
-      this.props.set(attr.set("app", app - sub))
-    }}>-{sub}</button>;
+    return (
+      <div className="control">
+        <button className="button" onClick={() => {
+          this.props.set(attr.set("app", app - sub))
+        }}>外貌 -{sub}</button>
+      </div>
+    );
   }
 }
 
@@ -120,10 +125,12 @@ class AppDeduct extends React.Component<Props> {
 function Armor(props: Props) {
   const KEY = "_Armor";
   return (
-    <div>
-      <label htmlFor="armor">护甲</label>
-      <NumberInput id="armor" value={props.attributes.get(KEY, 0)}
-                   onChange={n => props.set(props.attributes.set(KEY, n))}/>
+    <div className="field">
+      <label className="label" htmlFor="armor">护甲</label>
+      <div className="control">
+        <NumberInput id="armor" className="input" value={props.attributes.get(KEY, 0)}
+                     onChange={n => props.set(props.attributes.set(KEY, n))}/>
+      </div>
     </div>
   );
 }
@@ -151,7 +158,12 @@ class Db extends React.Component<Props> {
   render() {
     const db = dbAndBuild(this.props.attributes)[0];
     const value = <span>{db === null ? "??" : db}</span>;
-    return <p>伤害加深（DB）：{value}</p>
+    return (
+      <div className="tags has-addons">
+        <span className="tag is-black">伤害加深</span>
+        <span className="tag is-info">{value}</span>
+      </div>
+    )
   }
 }
 
@@ -160,7 +172,12 @@ class Build extends React.Component<Props> {
   render() {
     const build = dbAndBuild(this.props.attributes)[1];
     const value = <span>{build === null ? "??" : build}</span>;
-    return <p>体格（Build）：{value}</p>
+    return (
+      <div className="tags has-addons">
+        <span className="tag is-black">体格</span>
+        <span className="tag is-info">{value}</span>
+      </div>
+    );
   }
 }
 
@@ -189,7 +206,12 @@ class Mov extends React.Component<Props> {
   render() {
     const mov = Mov.calculate(this.props.attributes);
     if (mov === null) return null;
-    else return (<p>移动力（MOV）：{mov}</p>);
+    else return (
+      <div className="tags has-addons">
+        <span className="tag is-black">移动力</span>
+        <span className="tag is-info">{mov}</span>
+      </div>
+    );
   }
 }
 
@@ -267,7 +289,7 @@ class Sum extends React.Component<Props> {
   }
 
   render() {
-    return (<div>所有属性之和为{Sum.calculate(this.props.attributes)}</div>);
+    return (<div className="help">所有属性之和为{Sum.calculate(this.props.attributes)}</div>);
   }
 }
 
@@ -285,31 +307,71 @@ export class Stats extends React.Component<Props> {
       });
 
     return (
-      <div className="Stats section">
-        <AgeField label="年龄" {...name("age")} upper={99}/>
-        <AutoRoll {...this.props}/>
-        <div>
-          <Field label="力量" {...name("str")} upper={99}/>
-          <Field label="体质" {...name("con")} upper={99}/>
-          <Field label="体型" {...name("siz")}/>
-          <Field label="敏捷" {...name("dex")} upper={99}/>
-          <Field label="外貌" {...name("app")} upper={99}><AppDeduct {...this.props}/></Field>
-          <Field label="智力" {...name("int")} upper={99}/>
-          <Field label="意志" {...name("pow")}/>
-          <Field label="教育" {...name("edu")} upper={99}><EduEnhance {...this.props}/></Field>
-        </div>
-        <Sum {...this.props}/>
-        <Field label="幸运" {...name("luck")} upper={99}/>
-        {affect.type === "Young" && luck2 !== undefined ? <div>已投两次幸运取大值（较小 {luck2}）。</div> : null}
-        <StatusMark/>
-        <div className="other-attributes">
-          <Hp {...this.props}/>
-          <San {...this.props}/>
-          <Mp {...this.props}/>
-          <Db {...this.props}/>
-          <Build {...this.props}/>
-          <Mov {...this.props}/>
-          <Armor {...this.props}/>
+      <div className="Stats container">
+        <div className="columns is-mobile is-multiline">
+          <div className="column">
+            <div className="attributes box">
+              <h2 className="title is-5">人物属性</h2>
+              <AgeField label="年龄" {...name("age")} upper={99}/>
+              <AutoRoll {...this.props}/>
+              <div className="columns is-mobile is-gapless">
+                <div className="column">
+
+                  <Field label="力量" {...name("str")} upper={99}/>
+                  <Field label="体质" {...name("con")} upper={99}/>
+                  <Field label="体型" {...name("siz")}/>
+                </div>
+                <div className="column">
+                  <Field label="敏捷" {...name("dex")} upper={99}/>
+                  <Field label="外貌" {...name("app")} upper={99}/>
+                  <Field label="智力" {...name("int")} upper={99}/>
+                </div>
+                <div className="column">
+                  <Field label="意志" {...name("pow")}/>
+                  <Field label="教育" {...name("edu")} upper={99}/>
+                </div>
+              </div>
+              <div className="columns">
+                <div className="column"><EduEnhance {...this.props}/></div>
+                <div className="column"><AppDeduct {...this.props}/></div>
+              </div>
+              <Sum {...this.props}/>
+
+              <Field label="幸运" {...name("luck")} upper={99}/>
+              {affect.type === "Young" && luck2 !== undefined ?
+                <div className="help">已投两次幸运取大值（较小 {luck2}）。</div> : null}
+            </div>
+          </div>
+          <div className="column">
+
+            <div className="other box">
+              <div className="columns">
+                <div className="column">
+
+                  <Hp {...this.props}/>
+                  <San {...this.props}/>
+                </div>
+                <div className="column">
+                  <Mp {...this.props}/>
+                  <Armor {...this.props}/>
+                </div>
+              </div>
+              <div className="field is-grouped is-grouped-multiline">
+                <div className="control"><Db {...this.props}/></div>
+                <div className="control"><Build {...this.props}/></div>
+                <div className="control"><Mov {...this.props}/></div>
+
+
+              </div>
+            </div>
+          </div>
+          <div className="column">
+            <div className="box">
+              <p className="title is-5">状态与备注</p>
+              <StatusMark/>
+            </div>
+          </div>
+
         </div>
       </div>
 

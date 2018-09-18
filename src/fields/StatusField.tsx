@@ -31,18 +31,23 @@ export class StatusField extends React.Component<Props, State> {
     const value = this.state.value;
     const label = this.props.label;
     const id = this.state.id;
-    const upperLimit = <span> / {upper === undefined ? "?" : upper}</span>;
+    const upperLimit = <span className="button is-static"> / {upper === undefined ? "?" : upper}</span>;
     const initial = this.props.initial;
     const initialValue = initial !== undefined ? initial : upper;
 
-    const outOfRange = value !== undefined && upper !== undefined && value < upper;
+    const outOfRange = value !== undefined && upper !== undefined && value > upper;
+    const inputClassName = cls("input", {"is-danger": outOfRange});
 
     return (
       <div className={cls("StatusField", {"out-of-range": outOfRange})}>
-        <label htmlFor={id}>{label}</label>
-        <NumberInput value={this.state.edited ? value : initialValue} onChange={this.handleChange} id={id}
-                     className="input"/>
-        {upperLimit}
+        <label className="label" htmlFor={id}>{label}</label>
+        <div className="field has-addons">
+          <div className="control">
+            <NumberInput value={this.state.edited ? value : initialValue} onChange={this.handleChange} id={id}
+                         className={inputClassName}/>
+          </div>
+          <div className="control">{upperLimit}</div>
+        </div>
       </div>
     );
   }

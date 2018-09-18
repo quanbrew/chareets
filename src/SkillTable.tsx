@@ -4,8 +4,8 @@ import {Skill} from "./skillData";
 import {Props as SkillItemProps, SkillItem} from "./SkillItem";
 import {Attributes} from "./Sheet";
 import {div} from "./utils";
-import {Occupation} from "./Occupation";
-import {PointInput} from "./fields/PointInput";
+
+// import {Occupation} from "./Occupation";
 
 interface Props {
   attributes: Attributes;
@@ -47,11 +47,11 @@ export class SkillTable extends React.Component<Props, State> {
   };
   private skillFilter = () => {
     const filter = this.state.filter;
-    const placeholder = "克苏鲁神话 或者 Cthulhu Mythos";
+    const placeholder = "筛选克苏鲁神话 或者 Cthulhu Mythos";
     return (
-      <div className="">
-        <label className="" htmlFor="skill-filter">筛选</label>
-        <input id="skill-filter" className="" value={filter} placeholder={placeholder}
+      <div className="field">
+        {/*<label className="label" htmlFor="skill-filter">筛选</label>*/}
+        <input id="skill-filter" className="input" value={filter} placeholder={placeholder}
                onChange={e => this.setState({filter: e.currentTarget.value})}/>
       </div>);
   };
@@ -112,14 +112,28 @@ export class SkillTable extends React.Component<Props, State> {
     const interestPoint = this.props.attributes.get("int", 0) * 2;
 
     return (
-      <div className="SkillTable section">
-        <Occupation/>
-        <div>
-          <span>职业点 {total.occupation}/<PointInput/></span>
-          <span>兴趣点 {total.interest}/{interestPoint}</span>
+      <div className="SkillTable container" onClick={this.cancelEdit}>
+        <p className="title is-4">技能</p>
+        {/*<Occupation/>*/}
+        <div className="field is-grouped is-grouped-multiline">
+          <div className="control">
+            <div className="tags has-addons">
+              <span className="tag is-dark is-medium">职业点</span>
+              <span className="tag is-info is-medium">{total.occupation}</span>
+              <span className="tag is-primary is-medium">/ ??</span>
+            </div>
+          </div>
+
+          <div className="control">
+            <div className="tags has-addons">
+              <span className="tag is-dark is-medium">兴趣点</span>
+              <span className="tag is-info is-medium">{total.interest}</span>
+              <span className="tag is-primary is-medium">/ {interestPoint}</span>
+            </div>
+          </div>
         </div>
         {this.skillFilter()}
-        <div>{skillList}</div>
+        <div className="columns  is-gapless is-multiline is-mobile">{skillList}</div>
       </div>
     );
   }

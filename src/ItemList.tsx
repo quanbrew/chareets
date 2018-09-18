@@ -25,28 +25,33 @@ export class ItemList extends React.Component<Props, State> {
 
   render() {
     const mapper = (item: string, id: number) => (
-      <li key={id}>
-        <div>{item}</div>
-        <div>
-          <button onClick={() => this.setState({items: this.state.items.remove(id)})}>
-            <FontAwesomeIcon icon={faTrash}/>
-          </button>
-        </div>
-      </li>
+      <span className="tag is-medium" key={id}>{item}
+        <button
+          className="delete"
+          onClick={() => this.setState({items: this.state.items.remove(id)})}>
+          <FontAwesomeIcon icon={faTrash}/>
+        </button>
+      </span>
     );
     return (
-      <div>
-        <div>
-          <input type="text" value={this.state.current}
-                 onChange={e => this.setState({current: e.currentTarget.value})}/>
-          <button onClick={() => {
-            const current = this.state.current.trim();
-            if (current !== "") {
-              this.setState({current: "", items: this.state.items.push(current)});
-            }
-          }}><FontAwesomeIcon icon={faPlus}/></button>
+      <div className="ItemList">
+        <div className="field has-addons">
+          <div className="control">
+            <input type="text" value={this.state.current} className="input"
+                   onChange={e => this.setState({current: e.currentTarget.value})}/>
+
+          </div>
+
+          <div className="control">
+            <button className="button" onClick={() => {
+              const current = this.state.current.trim();
+              if (current !== "") {
+                this.setState({current: "", items: this.state.items.push(current)});
+              }
+            }}><FontAwesomeIcon icon={faPlus}/></button>
+          </div>
         </div>
-        <ul>{this.state.items.map(mapper)}</ul>
+        <div className="tags">{this.state.items.map(mapper)}</div>
       </div>
     );
   }
