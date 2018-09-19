@@ -20,9 +20,9 @@ export class Note extends React.Component<{}, State> {
 
   render() {
     return (
-      <div className="container">
+      <div className="box">
         <div className="field">
-          <label className="label" htmlFor={this.state.id}>调查员笔记</label>
+          <label className="label title is-5" htmlFor={this.state.id}>调查员笔记</label>
           <textarea className="textarea" value={this.state.value} id={this.state.id} onChange={this.handleChange}/>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {List} from "immutable";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {faPlus} from "@fortawesome/free-solid-svg-icons";
 
 
 interface State {
@@ -25,12 +25,10 @@ export class ItemList extends React.Component<Props, State> {
 
   render() {
     const mapper = (item: string, id: number) => (
-      <span className="tag is-medium" key={id}>{item}
+      <span className="tag is-large" key={id}>{item}
         <button
-          className="delete"
-          onClick={() => this.setState({items: this.state.items.remove(id)})}>
-          <FontAwesomeIcon icon={faTrash}/>
-        </button>
+          className="delete is-small"
+          onClick={() => this.setState({items: this.state.items.remove(id)})}/>
       </span>
     );
     return (

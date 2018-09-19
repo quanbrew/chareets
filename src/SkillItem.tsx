@@ -2,7 +2,7 @@ import {Skill, SubSkill} from "./skillData";
 import * as React from "react";
 import {SyntheticEvent} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCodeBranch, faDesktop, faPlusSquare, faSave, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
+import {faCheck, faCodeBranch, faDesktop, faPlusSquare, faSave, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
 import {faPagelines} from "@fortawesome/free-brands-svg-icons";
 import {PointInput} from "./fields/PointInput";
 import cls from "classnames";
@@ -182,7 +182,8 @@ export class SkillItem extends React.Component<Props, State> {
             <span className="card-header-icon">{this.icon()}</span>
           </div>
           <div className="card-content">
-            {/*{this.props.skill.name ? <p className="name">{this.props.skill.name}</p> : null}*/}
+            {this.props.skill.mark === true ?
+              <span className="skill-mark tag"><FontAwesomeIcon icon={faCheck}/></span> : null}
             <div className="total">{this.total()}</div>
           </div>
         </div>
@@ -211,7 +212,7 @@ export class SkillItem extends React.Component<Props, State> {
                      onChange={(e) => {
                        this.editSkill({mark: e.currentTarget.checked});
                      }}
-                     type="checkbox"/> 标记
+                     type="checkbox"/> 成长标记
             </label>
           </div>
         </div>

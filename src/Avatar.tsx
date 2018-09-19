@@ -5,7 +5,6 @@ import Dropzone from "react-dropzone";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCloudUploadAlt, faTrash} from "@fortawesome/free-solid-svg-icons";
 
-
 interface State {
   image?: File,
   scale: number
@@ -24,38 +23,57 @@ export class Avatar extends React.Component<{}, State> {
   }
 
   render() {
-    const border = 0;
+    const size = 230;
+    const border = 10;
     const avatar = this.state.image;
     const scale = this.state.scale;
     const color = [255, 255, 255, 0.6];
 
-    const clear = (
+    const slider = (
       <div className="control">
-        <button className="button is-small" onClick={this.clearImage}><FontAwesomeIcon icon={faTrash}/></button>
-      </div>
-    );
-    const scale_input = (
-      <div className="control">
-        <input type="range" value={this.state.scale} onChange={this.handleRange}
-               min={1.0} max={6.0} step={0.01} className="scale"/>
+        <div className="field">
+          <input type="range" value={this.state.scale} onChange={this.handleRange}
+                 min={1.0} max={10.0} step={0.01} width={size} height={size}
+                 style={{width: size + border * 2}}
+                 className="scale-slider slider"/>
+        </div>
       </div>
     );
 
-    return (
-      <div className="Avatar">
-        <Dropzone onDrop={this.handleDrop} disableClick={avatar !== undefined}
-                  className="avatar-drop" accept="image/*">
-          {avatar !== undefined ?
-            (<div className="editor"><AvatarEditor image={avatar} border={border}
-                                                   color={color} scale={scale} rotate={0}/></div>) :
-            (<div className="help">
-              <FontAwesomeIcon style={{width: "5em", height: "5em"}} className="upload-avatar" icon={faCloudUploadAlt}/>
-              <div>请将角色的图片拖进这里，或者点击上传</div>
-            </div>)
-          }
-        </Dropzone>
-        {avatar ? <div className="tool">{scale_input}{clear}</div> : null}
-      </div>
-    );
+
+    if (avatar === undefined) {
+      return (
+        <div className="Avatar">
+          <div className="upload">
+            <Dropzone onDrop={this.handleDrop} disableClick={avatar !== undefined}
+                      className="avatar-drop" accept="image/*">
+              <div className="upload-hint">
+                <FontAwesomeIcon className="avatar-upload-icon" icon={faCloudUploadAlt}/>
+                <div>请将角色的图片拖进这里，或者点击上传</div>
+              </div>
+            </Dropzone>
+          </div>
+        </div>
+      );
+    }
+    else {
+      return (
+        <div className="Avatar">
+          <div className="editor">
+            {slider}
+            <AvatarEditor image={avatar} border={border} color={color} style={{}}
+                          scale={scale} rotate={0} width={size} height={size}/>
+            <div className="field">
+              <div className="control">
+                <button className="button is-small" onClick={this.clearImage}>
+                  <span className="icon is-small"><FontAwesomeIcon icon={faTrash}/></span>
+                  <span>清除当前</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
   }
 }

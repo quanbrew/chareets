@@ -2,20 +2,26 @@
 
 $body-size: 14px;
 
+$avatar-width: 250px;
+
+
 @import "../node_modules/bulma/bulma.sass";
+@import "../node_modules/bulma-slider/src/sass";
 
 .Avatar {
-
-  .scale {
+  .upload-hint {
+    padding: 4em 0;
+    text-align: center;
   }
-
-  .avatar-drop {
+  .avatar-upload-icon {
+    width: 4em;
+    height: 4em;
   }
 }
 
 .SkillItem {
-  .card {
-
+  .skill-mark {
+    float: left;
   }
   .total {
     font-size: 200%;
@@ -68,6 +74,7 @@ $body-size: 14px;
 
 .PointInput {
   min-width: 5em;
+  max-width: 8em;
 }
 
 .Information-fields {
@@ -78,6 +85,6 @@ $body-size: 14px;
     //width: 20em;
   }
   .other {
-    //width: 20em;
+    min-width: 14em;
   }
 }

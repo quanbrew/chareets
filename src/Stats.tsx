@@ -53,10 +53,13 @@ class AutoRoll extends React.Component<Props> {
   render() {
     const times = this.props.attributes.get(AutoRoll.KEY, 0);
     return (
-      <div className="control">
-        <button className="button" onClick={this.autoRoll}>
-          <FontAwesomeIcon icon={faDice}/>{times > 0 ? <span>已投 {times} 次</span> : <span>随机属性</span>}
-        </button>
+      <div className="AutoRoll field">
+        <div className="control">
+          <button className="button is-small" onClick={this.autoRoll}>
+            <span className="icon"><FontAwesomeIcon icon={faDice}/></span>{times > 0 ? <span>已投 {times} 次</span> :
+            <span>随机属性</span>}
+          </button>
+        </div>
       </div>
     );
   }
@@ -84,7 +87,7 @@ class EduEnhance extends React.Component<Props> {
     const num = shouldTimes !== null ? (<span>: {count}/{shouldTimes}</span>) : null;
     return (<div className="control">
       <a className="button" onClick={this.eduEnhance}>
-        <FontAwesomeIcon icon={faGraduationCap}/> 教育增强检定 {num}
+        <span className="icon"><FontAwesomeIcon icon={faGraduationCap}/></span><span>教育增强检定 {num}</span>
       </a>
     </div>);
   }
@@ -128,7 +131,7 @@ function Armor(props: Props) {
     <div className="field">
       <label className="label" htmlFor="armor">护甲</label>
       <div className="control">
-        <NumberInput id="armor" className="input" value={props.attributes.get(KEY, 0)}
+        <NumberInput id="armor" className="input is-small" value={props.attributes.get(KEY, 0)}
                      onChange={n => props.set(props.attributes.set(KEY, n))}/>
       </div>
     </div>
@@ -288,7 +291,7 @@ class Sum extends React.Component<Props> {
   }
 
   render() {
-    return (<div className="help">所有属性之和为{Sum.calculate(this.props.attributes)}</div>);
+    return (<div className="help">所有属性（不含幸运）之和为 {Sum.calculate(this.props.attributes)}</div>);
   }
 }
 
@@ -309,36 +312,38 @@ export class Stats extends React.Component<Props> {
       <div className="Stats container">
         <div className="columns is-mobile is-multiline">
           <div className="column">
-            <div className="attributes box">
-              <h2 className="title is-5">人物属性</h2>
-              <AgeField label="年龄" {...name("age")} upper={99}/>
-              <AutoRoll {...this.props}/>
-              <div className="columns is-gapless">
-                <div className="column">
+            <div className="attributes card">
+              <div className="card-header"><p className="card-header-title">人物属性</p></div>
+              <div className="card-content">
+                <AgeField label="年龄" {...name("age")} upper={99}/>
+                <AutoRoll {...this.props}/>
+                <div className="columns is-gapless is-mobile">
+                  <div className="column">
 
-                  <Field label="力量" {...name("str")} upper={99}/>
-                  <Field label="体质" {...name("con")} upper={99}/>
-                  <Field label="体型" {...name("siz")}/>
+                    <Field label="力量" {...name("str")} upper={99}/>
+                    <Field label="体质" {...name("con")} upper={99}/>
+                    <Field label="体型" {...name("siz")}/>
+                  </div>
+                  <div className="column">
+                    <Field label="敏捷" {...name("dex")} upper={99}/>
+                    <Field label="外貌" {...name("app")} upper={99}/>
+                    <Field label="智力" {...name("int")} upper={99}/>
+                  </div>
+                  <div className="column">
+                    <Field label="意志" {...name("pow")}/>
+                    <Field label="教育" {...name("edu")} upper={99}/>
+                    <Field label="幸运" {...name("luck")} upper={99}/>
+                  </div>
                 </div>
-                <div className="column">
-                  <Field label="敏捷" {...name("dex")} upper={99}/>
-                  <Field label="外貌" {...name("app")} upper={99}/>
-                  <Field label="智力" {...name("int")} upper={99}/>
+                <div className="columns">
+                  <div className="column"><EduEnhance {...this.props}/></div>
+                  <div className="column"><AppDeduct {...this.props}/></div>
                 </div>
-                <div className="column">
-                  <Field label="意志" {...name("pow")}/>
-                  <Field label="教育" {...name("edu")} upper={99}/>
-                </div>
-              </div>
-              <div className="columns">
-                <div className="column"><EduEnhance {...this.props}/></div>
-                <div className="column"><AppDeduct {...this.props}/></div>
-              </div>
-              <Sum {...this.props}/>
+                <Sum {...this.props}/>
 
-              <Field label="幸运" {...name("luck")} upper={99}/>
-              {affect.type === "Young" && luck2 !== undefined ?
-                <div className="help">已投两次幸运取大值（较小 {luck2}）。</div> : null}
+                {affect.type === "Young" && luck2 !== undefined ?
+                  <div className="help">已投两次幸运取大值（较小 {luck2}）。</div> : null}
+              </div>
             </div>
           </div>
           <div className="column">
@@ -365,9 +370,12 @@ export class Stats extends React.Component<Props> {
             </div>
           </div>
           <div className="column">
-            <div className="box">
-              <p className="title is-5">状态与备注</p>
-              <StatusMark/>
+            <div className="card">
+              <div className="card-header">
+                <p className="card-header-title">状态与备注</p>
+              </div>
+              <div className="card-content"><StatusMark/></div>
+
             </div>
           </div>
 

@@ -71,10 +71,20 @@ class Sheet extends React.Component<{}, SheetData> {
           </section>
           <section className="section">
             <div className="container">
-              <p>随身物品</p>
-              <ItemList/>
+              <div className="columns">
+                <div className="column">
+                  <div className="card">
+                    <div className="card-header"><p className="card-header-title">随身物品</p></div>
+                    <div className="card-content">
+
+                      <ItemList/>
+                    </div>
+                  </div>
+                </div>
+                <div className="column"><Note/></div>
+              </div>
             </div>
-            <Note/>
+
           </section>
         </div>
       </SheetContext.Provider>
