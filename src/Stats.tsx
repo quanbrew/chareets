@@ -3,6 +3,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faDice, faGraduationCap} from "@fortawesome/free-solid-svg-icons";
 import NumberInput from './fields/NumberInput';
 import {div, roll} from "./utils";
+import {Map} from "immutable";
 import {StatusField} from "./fields/StatusField";
 import {StatusMark} from "./StatusMark";
 import {Attributes, SheetContext, SheetData} from "./Sheet";
@@ -85,26 +86,16 @@ class EduEnhance extends React.Component<Props> {
   render() {
     const count = this.props.attributes.get(EduEnhance.KEY, 0);
     const shouldTimes = this.shouldEnhanceTimes();
-    let tooMore = false;
-    let text = null;
-    if (shouldTimes !== null) {
-      const remain = shouldTimes - count;
-      text = <span>教育增强鉴定 还剩 {remain} 次</span>;
-      tooMore = remain < 0;
+    if (shouldTimes === null) {
+      return null;
     }
-    else if (count > 0) {
-      text = <span>无需教育增强检定，已增强 {count} 次</span>;
-      tooMore = true;
-    }
-    else {
-      text = <span>教育增强检定</span>;
-    }
-
-    const className = cls("button", {"is-danger": tooMore});
+    const remain = shouldTimes - count;
+    const text = remain > 0 ? <span>: 还剩 {remain} 次</span> : null;
 
     return (<div className="control">
-      <a className={className} onClick={this.eduEnhance}>
-        <span className="icon"><FontAwesomeIcon icon={faGraduationCap}/></span>{text}
+      <a className={cls("button", {"is-static": remain === 0})} onClick={this.eduEnhance}>
+        <span className="icon"><FontAwesomeIcon icon={faGraduationCap}/></span>
+        <span>教育增强</span>{text}
       </a>
     </div>);
   }
@@ -122,20 +113,56 @@ class EduEnhance extends React.Component<Props> {
 
 
 class AppDeduct extends React.Component<Props> {
+  KEY = "_AppDeduct";
+
   render() {
     const age = this.props.attributes.get("age");
     if (age === undefined) return null;
     const affect = ageAffect(age);
     const attr = this.props.attributes;
+    const flagValue = 42;
     const app = attr.get("app");
-    if (affect.type !== "Normal" || affect.appDeduct === 0 || app === undefined)
+    if (
+      affect.type !== "Normal" || affect.appDeduct === 0 || app === undefined) {
       return null;
+    }
+    const afterDeduct = attr.get(this.KEY) === flagValue;
     const sub = affect.appDeduct;
     return (
       <div className="control">
-        <button className="button" onClick={() => {
-          this.props.setter(attr.set("app", app - sub))
-        }}>外貌 -{sub}</button>
+        <button
+          className={cls("button", {"is-static": afterDeduct})}
+          onClick={() => this.props.setter(attr.set("app", app - sub).set(this.KEY, flagValue))}>
+          外貌 -{sub}
+        </button>
+      </div>
+    );
+  }
+}
+
+
+class EduDeduct extends React.Component<Props> {
+  KEY = "_AppDeduct";
+
+  render() {
+    const age = this.props.attributes.get("age");
+    if (age === undefined) return null;
+    const affect = ageAffect(age);
+    const attr = this.props.attributes;
+    const flagValue = 42;
+    const edu = attr.get("edu");
+    if (affect.type !== "Young" || edu === undefined) {
+      return null;
+    }
+    const afterDeduct = attr.get(this.KEY) === flagValue;
+    const deductValue = 5;
+    return (
+      <div className="control">
+        <button
+          className={cls("button", {"is-static": afterDeduct})}
+          onClick={() => this.props.setter(attr.set("edu", edu - deductValue).set(this.KEY, flagValue))}>
+          教育 -{deductValue}
+        </button>
       </div>
     );
   }
@@ -314,6 +341,12 @@ class Sum extends React.Component<Props> {
 
 
 export class Stats extends React.Component<Props> {
+  handleReset = () => {
+    const attr: Attributes = this.props.attributes;
+    const next: Attributes = Map().set(AutoRoll.KEY, attr.get(AutoRoll.KEY, 0));
+    this.props.setter(next);
+  };
+
   public render() {
     const attr = this.props.attributes;
     const affect = ageAffect(attr.get("age", 0));
@@ -324,6 +357,7 @@ export class Stats extends React.Component<Props> {
         set: (v: number) => this.props.setter(attr.set(k, v)),
         value: attr.get(k)
       });
+
 
     return (
       <div className="Stats container">
@@ -352,9 +386,13 @@ export class Stats extends React.Component<Props> {
                     <Field label="幸运" {...name("luck")} upper={99}/>
                   </div>
                 </div>
-                <div className="columns">
-                  <div className="column"><EduEnhance {...this.props}/></div>
-                  <div className="column"><AppDeduct {...this.props}/></div>
+                <div className="field is-grouped">
+                  <div className="control">
+                    <button className="button" onClick={this.handleReset}>重置</button>
+                  </div>
+                  <EduEnhance {...this.props}/>
+                  <AppDeduct {...this.props}/>
+                  <EduDeduct {...this.props}/>
                 </div>
                 <Sum {...this.props}/>
 
