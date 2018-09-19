@@ -253,10 +253,10 @@ export class SkillItem extends React.Component<Props, State> {
       icon = <FontAwesomeIcon title="分支" icon={faCodeBranch}/>;
     }
     else if (irregular) {
-      icon = <FontAwesomeIcon title="现代" icon={faDesktop}/>;
+      icon = <FontAwesomeIcon title="非常规" icon={faPagelines}/>;
     }
     else if (modern) {
-      icon = <FontAwesomeIcon title="非常规" icon={faPagelines}/>;
+      icon = <FontAwesomeIcon title="现代" icon={faDesktop}/>;
     }
     return icon;
   }
