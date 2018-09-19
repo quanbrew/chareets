@@ -4,6 +4,8 @@ import {Skill} from "./skillData";
 import {Props as SkillItemProps, SkillItem} from "./SkillItem";
 import {Attributes} from "./Sheet";
 import {div} from "./utils";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faPlus} from "@fortawesome/free-solid-svg-icons";
 
 // import {Occupation} from "./Occupation";
 
@@ -120,7 +122,7 @@ export class SkillTable extends React.Component<Props, State> {
             <div className="tags has-addons">
               <span className="tag is-dark is-medium">职业点</span>
               <span className="tag is-info is-medium">{total.occupation}</span>
-              <span className="tag is-primary is-medium">/ ??</span>
+              <span className="tag is-primary is-medium">/ 开发中</span>
             </div>
           </div>
 
@@ -133,7 +135,18 @@ export class SkillTable extends React.Component<Props, State> {
           </div>
         </div>
         {this.skillFilter()}
-        <div className="columns  is-gapless is-multiline is-mobile">{skillList}</div>
+        <div className="columns  is-gapless is-multiline is-mobile">
+          {skillList}
+          <div className="column">
+            <div className="card new-skill">
+              <div className="card-header">
+                <p className="card-header-title">新增技能</p>
+                <i className="card-header-icon"><FontAwesomeIcon icon={faPlus}/></i>
+              </div>
+              <div className="card-content">可以创建新技能以适应特殊情况，这个功能还在开发中</div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

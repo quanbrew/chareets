@@ -89,7 +89,15 @@ export class SkillItem extends React.Component<Props, State> {
       </div>
 
     </div>);
-    return (<div>{initial}{occupation}{interest}{growth}{this.mark()}</div>)
+    return (
+      <div>
+        <div className="columns">
+          <div className="column">{initial}{occupation}</div>
+          <div className="column">{interest}{growth}</div>
+        </div>
+        {this.mark()}
+      </div>
+    );
   };
   private select = () => {
     let select = null;

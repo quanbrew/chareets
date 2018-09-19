@@ -21,7 +21,7 @@
   },
   "scripts": {
     "start": "parcel src/index.html",
-    "build": "NODE_ENV=production parcel build src/index.html"
+    "build": "NODE_ENV=production parcel build --public-url '.' src/index.html"
   },
   "devDependencies": {
     "@types/classnames": "^2.2.6",

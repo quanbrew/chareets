@@ -205,11 +205,10 @@ class Mov extends React.Component<Props> {
 
   render() {
     const mov = Mov.calculate(this.props.attributes);
-    if (mov === null) return null;
-    else return (
+    return (
       <div className="tags has-addons">
         <span className="tag is-black">移动力</span>
-        <span className="tag is-info">{mov}</span>
+        <span className="tag is-info">{mov === null ? "??" : mov}</span>
       </div>
     );
   }
@@ -314,7 +313,7 @@ export class Stats extends React.Component<Props> {
               <h2 className="title is-5">人物属性</h2>
               <AgeField label="年龄" {...name("age")} upper={99}/>
               <AutoRoll {...this.props}/>
-              <div className="columns is-mobile is-gapless">
+              <div className="columns is-gapless">
                 <div className="column">
 
                   <Field label="力量" {...name("str")} upper={99}/>

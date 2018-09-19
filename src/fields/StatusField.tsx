@@ -31,7 +31,7 @@ export class StatusField extends React.Component<Props, State> {
     const value = this.state.value;
     const label = this.props.label;
     const id = this.state.id;
-    const upperLimit = <span className="button is-static"> / {upper === undefined ? "?" : upper}</span>;
+    const upperLimit = <span className="button is-static"> / {upper === undefined ? "??" : upper}</span>;
     const initial = this.props.initial;
     const initialValue = initial !== undefined ? initial : upper;
 

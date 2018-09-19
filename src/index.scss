@@ -16,7 +16,6 @@ $body-size: 14px;
 .SkillItem {
   .card {
 
-    min-width: 9em;
   }
   .total {
     font-size: 200%;
@@ -48,6 +47,8 @@ $body-size: 14px;
 
   .non-edit {
 
+    min-width: 9em;
+    max-width: 14em;
     height: 9em;
     &:hover {
       background-color: $white-bis;
@@ -58,6 +59,7 @@ $body-size: 14px;
   }
 
   .editing {
+    box-shadow: 1px 1px 5px #777777;
     position: absolute;
     z-index: 100;
     min-width: 8em;
@@ -65,7 +67,7 @@ $body-size: 14px;
 }
 
 .PointInput {
-  //max-width: 8em;
+  min-width: 5em;
 }
 
 .Information-fields {
