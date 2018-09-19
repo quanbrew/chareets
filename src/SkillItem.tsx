@@ -264,10 +264,17 @@ export class SkillItem extends React.Component<Props, State> {
   private editing() {
     let label = null;
     if (this.state.skill.selected === "other") {
-      label = <input
-        onChange={(e) => this.editSkill({label: e.currentTarget.value})}
-        value={this.state.skill.label}
-      />;
+      label = (
+        <div className="field">
+          <div className="control">
+            <input
+              className="input"
+              onChange={(e) => this.editSkill({label: e.currentTarget.value})}
+              value={this.state.skill.label}
+            />
+          </div>
+        </div>
+      );
     }
     else {
       label = this.label();
