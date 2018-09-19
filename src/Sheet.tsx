@@ -9,7 +9,7 @@ import {ItemList} from "./ItemList";
 import {Note} from "./Note";
 import {Skill, skills} from "./skillData";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faSave, faUndo} from "@fortawesome/free-solid-svg-icons";
+import {faFileExport, faFileImport, faSave, faUndo} from "@fortawesome/free-solid-svg-icons";
 
 export type Attributes = Map<string, number>;
 
@@ -20,6 +20,7 @@ export interface SheetData {
   skills: List<Skill>;
   note: string;
   items: List<string>;
+  buffer: string;
 }
 
 
@@ -32,6 +33,7 @@ function sheetData(): SheetData {
       skills: List(skills),
       note: "",
       items: List(),
+      buffer: ""
     }
   );
 }
@@ -46,6 +48,7 @@ function sheetDataFromJson(data: string): SheetData {
     skills: List(o.skills),
     note: o.note,
     items: List(o.items),
+    buffer: ""
   });
 }
 
@@ -71,16 +74,29 @@ class Sheet extends React.Component<{}, SheetData> {
 
   setItems = (next: List<string>) =>
     this.setState({items: next});
+
   handleLoad = () => {
     const key = "sheet";
     const loaded = localStorage.getItem(key);
     if (loaded !== null)
       this.setState(sheetDataFromJson(loaded));
   };
+
   handleSave = () => {
     const key = "sheet";
     const str = JSON.stringify(this.state);
+
     localStorage.setItem(key, str);
+  };
+
+  handleImport = () => {
+    this.setState(sheetDataFromJson(this.state.buffer));
+  };
+
+  handleExport = () => {
+    const state = {...this.state};
+    state.buffer = "";
+    this.setState({buffer: JSON.stringify(state)});
   };
 
   constructor(props: {}) {
@@ -109,7 +125,6 @@ class Sheet extends React.Component<{}, SheetData> {
                       <span className="icon"><FontAwesomeIcon icon={faUndo}/></span><span>载入</span>
                     </button>
                   </div>
-
                 </div>
               </div>
             </div>
@@ -145,6 +160,31 @@ class Sheet extends React.Component<{}, SheetData> {
             </div>
 
           </section>
+
+          <footer className="footer">
+            <div className="content container">
+              <div className="field">
+                <div className="control">
+                  <textarea className="textarea" value={this.state.buffer} onChange={e => {
+                    this.setState({buffer: e.currentTarget.value})
+                  }}/>
+                </div>
+              </div>
+              <div className="field is-grouped">
+                <div className="control">
+                  <button className="button" onClick={this.handleImport}>
+                    <span className="icon"><FontAwesomeIcon icon={faFileImport}/></span><span>导入</span>
+                  </button>
+                </div>
+
+                <div className="control">
+                  <button className="button" onClick={this.handleExport}>
+                    <span className="icon"><FontAwesomeIcon icon={faFileExport}/></span><span>导出</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </footer>
         </div>
       </SheetContext.Provider>
     );
