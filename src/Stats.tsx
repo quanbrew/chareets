@@ -9,6 +9,7 @@ import {Attributes, SheetContext, SheetData} from "./Sheet";
 import {AttributeField as Field} from "./fields/AttributeField";
 import {ageAffect, AgeField} from "./fields/AgeField";
 import {Skill} from "./skillData";
+import cls from "classnames";
 
 
 interface Props {
@@ -84,15 +85,31 @@ class EduEnhance extends React.Component<Props> {
   render() {
     const count = this.props.attributes.get(EduEnhance.KEY, 0);
     const shouldTimes = this.shouldEnhanceTimes();
-    const num = shouldTimes !== null ? (<span>: {count}/{shouldTimes}</span>) : null;
+    let tooMore = false;
+    let text = null;
+    if (shouldTimes !== null) {
+      const remain = shouldTimes - count;
+      text = <span>教育增强鉴定 还剩 {remain} 次</span>;
+      tooMore = remain < 0;
+    }
+    else if (count > 0) {
+      text = <span>无需教育增强检定，已增强 {count} 次</span>;
+      tooMore = true;
+    }
+    else {
+      text = <span>教育增强检定</span>;
+    }
+
+    const className = cls("button", {"is-danger": tooMore});
+
     return (<div className="control">
-      <a className="button" onClick={this.eduEnhance}>
-        <span className="icon"><FontAwesomeIcon icon={faGraduationCap}/></span><span>教育增强检定 {num}</span>
+      <a className={className} onClick={this.eduEnhance}>
+        <span className="icon"><FontAwesomeIcon icon={faGraduationCap}/></span>{text}
       </a>
     </div>);
   }
 
-  private shouldEnhanceTimes() {
+  private shouldEnhanceTimes(): number | null {
     const age = this.props.attributes.get("age");
     if (age === undefined) return null;
     const affect = ageAffect(age);
