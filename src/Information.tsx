@@ -6,14 +6,14 @@ import {InformationField as Field} from "./fields/InformationField";
 
 interface Props {
   information: Map<string, string>;
-  set: (key: string) => (value: string) => void;
+  setter: (key: string) => (value: string) => void;
 }
 
 
 export class Information extends React.Component<Props> {
   public render() {
     const name = (k: string) =>
-      ({value: this.props.information.get(k, ""), set: this.props.set(k)});
+      ({value: this.props.information.get(k, ""), set: this.props.setter(k)});
     return (
       <div className="Information container">
 

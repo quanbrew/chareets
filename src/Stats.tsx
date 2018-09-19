@@ -13,7 +13,7 @@ import {Skill} from "./skillData";
 
 interface Props {
   attributes: Attributes;
-  set: (next: Attributes) => void;
+  setter: (next: Attributes) => void;
 }
 
 
@@ -47,7 +47,7 @@ class AutoRoll extends React.Component<Props> {
         luck: luck1,
         luck2: luck2
       });
-    this.props.set(next);
+    this.props.setter(next);
   };
 
   render() {
@@ -78,7 +78,7 @@ class EduEnhance extends React.Component<Props> {
     const next = this.props.attributes
       .set(EduEnhance.KEY, times + 1)
       .set("edu", edu);
-    this.props.set(next);
+    this.props.setter(next);
   };
 
   render() {
@@ -117,7 +117,7 @@ class AppDeduct extends React.Component<Props> {
     return (
       <div className="control">
         <button className="button" onClick={() => {
-          this.props.set(attr.set("app", app - sub))
+          this.props.setter(attr.set("app", app - sub))
         }}>外貌 -{sub}</button>
       </div>
     );
@@ -132,7 +132,7 @@ function Armor(props: Props) {
       <label className="label" htmlFor="armor">护甲</label>
       <div className="control">
         <NumberInput id="armor" className="input is-small" value={props.attributes.get(KEY, 0)}
-                     onChange={n => props.set(props.attributes.set(KEY, n))}/>
+                     onChange={n => props.setter(props.attributes.set(KEY, n))}/>
       </div>
     </div>
   );
@@ -304,7 +304,7 @@ export class Stats extends React.Component<Props> {
     const name = (k: string) =>
       ({
         name: k,
-        set: (v: number) => this.props.set(attr.set(k, v)),
+        set: (v: number) => this.props.setter(attr.set(k, v)),
         value: attr.get(k)
       });
 

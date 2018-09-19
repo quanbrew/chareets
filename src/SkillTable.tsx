@@ -12,7 +12,7 @@ import {faPlus} from "@fortawesome/free-solid-svg-icons";
 interface Props {
   attributes: Attributes;
   skills: List<Skill>;
-  set: (skills: List<Skill>) => void;
+  setter: (skills: List<Skill>) => void;
 }
 
 
@@ -25,7 +25,7 @@ interface State {
 export class SkillTable extends React.Component<Props, State> {
   addSkill = (skill: Skill) => {
     if (skill.label !== "") {
-      this.props.set(this.props.skills.push(skill));
+      this.props.setter(this.props.skills.push(skill));
       this.setState({editing: null});
     }
   };
@@ -33,7 +33,7 @@ export class SkillTable extends React.Component<Props, State> {
   editSkill = (index: number) => (skill: Skill) => {
     if (skill.label !== "") {
       const nextList = this.props.skills.set(index, skill);
-      this.props.set(nextList);
+      this.props.setter(nextList);
       this.setState({editing: null});
     }
   };

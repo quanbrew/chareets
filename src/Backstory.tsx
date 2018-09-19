@@ -92,24 +92,27 @@ const hint = {
   ]),
 };
 
+interface Props {
+  backstory: Map<string, string>,
+  setter: (next: Map<string, string>) => void;
+}
 
 
 interface State {
-  backstory: Map<string, string>,
   hint: Map<string, string>,
 }
 
 
-export class Backstory extends React.Component<{}, State> {
+export class Backstory extends React.Component<Props, State> {
   autoGenerate = () => {
     for (let key in hint) {
       this.setState(prevState => ({hint: prevState.hint.set(key, hint[key]())}));
     }
   };
 
-  constructor(props: {}) {
+  constructor(props: Props) {
     super(props);
-    this.state = {backstory: Map(), hint: Map()};
+    this.state = {hint: Map()};
   }
 
   render() {
@@ -118,7 +121,7 @@ export class Backstory extends React.Component<{}, State> {
       name: name,
       hint: this.state.hint.get(name, ""),
       onChange: (value: string) =>
-        this.setState({backstory: this.state.backstory.set(name, value)})
+        this.props.setter(this.props.backstory.set(name, value))
     });
     return (
       <div className="Backstory container">
@@ -146,7 +149,6 @@ export class Backstory extends React.Component<{}, State> {
             <Field label="伤口与疤痕" {...name("injuriesAndScars")}/>
             <Field label="恐惧症和狂躁症" {...name("phobiasAndManias")}/>
           </div>
-
         </div>
       </div>
     );

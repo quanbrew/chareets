@@ -3,19 +3,24 @@ import {SyntheticEvent} from 'react';
 import {getId} from "./utils";
 
 
-interface State {
-  id: string;
+interface Props {
   value: string;
+  setter: (next: string) => void;
 }
 
 
-export class Note extends React.Component<{}, State> {
-  handleChange = (e: SyntheticEvent<HTMLTextAreaElement>) =>
-    this.setState({value: e.currentTarget.value});
+interface State {
+  id: string;
+}
 
-  constructor(props: {}) {
+
+export class Note extends React.Component<Props, State> {
+  handleChange = (e: SyntheticEvent<HTMLTextAreaElement>) =>
+    this.props.setter(e.currentTarget.value);
+
+  constructor(props: Props) {
     super(props);
-    this.state = {value: "", id: getId()};
+    this.state = {id: getId()};
   }
 
   render() {
@@ -23,7 +28,7 @@ export class Note extends React.Component<{}, State> {
       <div className="box">
         <div className="field">
           <label className="label title is-5" htmlFor={this.state.id}>调查员笔记</label>
-          <textarea className="textarea" value={this.state.value} id={this.state.id} onChange={this.handleChange}/>
+          <textarea className="textarea" value={this.props.value} id={this.state.id} onChange={this.handleChange}/>
         </div>
       </div>
     );

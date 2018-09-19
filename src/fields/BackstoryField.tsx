@@ -15,7 +15,7 @@ interface State {
 }
 
 
-export class BackstoryField extends React.Component<Props, State> {
+export class BackstoryField extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {id: getId()};

@@ -8,22 +8,49 @@ import {Backstory} from "./Backstory";
 import {ItemList} from "./ItemList";
 import {Note} from "./Note";
 import {Skill, skills} from "./skillData";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faSave, faUndo} from "@fortawesome/free-solid-svg-icons";
 
 export type Attributes = Map<string, number>;
 
-export class SheetData {
+export interface SheetData {
   attributes: Map<string, number>;
   information: Map<string, string>;
+  backstory: Map<string, string>;
   skills: List<Skill>;
-
-  constructor() {
-    this.attributes = Map();
-    this.information = Map();
-    this.skills = List(skills);
-  }
+  note: string;
+  items: List<string>;
 }
 
-export const SheetContext = React.createContext(new SheetData());
+
+function sheetData(): SheetData {
+  return (
+    {
+      attributes: Map(),
+      information: Map(),
+      backstory: Map(),
+      skills: List(skills),
+      note: "",
+      items: List(),
+    }
+  );
+}
+
+
+function sheetDataFromJson(data: string): SheetData {
+  const o = JSON.parse(data);
+  return ({
+    attributes: Map(o.attributes),
+    information: Map(o.information),
+    backstory: Map(o.backstory),
+    skills: List(o.skills),
+    note: o.note,
+    items: List(o.items),
+  });
+}
+
+
+export const SheetContext = React.createContext(sheetData());
 
 
 class Sheet extends React.Component<{}, SheetData> {
@@ -36,9 +63,29 @@ class Sheet extends React.Component<{}, SheetData> {
   setSkills = (next: List<Skill>) =>
     this.setState({skills: next});
 
+  setBackstory = (next: Map<string, string>) =>
+    this.setState({backstory: next});
+
+  setNote = (next: string) =>
+    this.setState({note: next});
+
+  setItems = (next: List<string>) =>
+    this.setState({items: next});
+  handleLoad = () => {
+    const key = "sheet";
+    const loaded = localStorage.getItem(key);
+    if (loaded !== null)
+      this.setState(sheetDataFromJson(loaded));
+  };
+  handleSave = () => {
+    const key = "sheet";
+    const str = JSON.stringify(this.state);
+    localStorage.setItem(key, str);
+  };
+
   constructor(props: {}) {
     super(props);
-    this.state = new SheetData();
+    this.state = sheetData();
   }
 
   public render() {
@@ -51,23 +98,36 @@ class Sheet extends React.Component<{}, SheetData> {
               <div className="container">
                 <h1 className="title">Chareets</h1>
                 <p className="subtitle">欢迎你，{playerName}</p>
+                <div className="field is-grouped">
+                  <div className="control">
+                    <button className="button" onClick={this.handleSave}>
+                      <span className="icon"><FontAwesomeIcon icon={faSave}/></span><span>保存</span>
+                    </button>
+                  </div>
+                  <div className="control">
+                    <button className="button" onClick={this.handleLoad}>
+                      <span className="icon"><FontAwesomeIcon icon={faUndo}/></span><span>载入</span>
+                    </button>
+                  </div>
+
+                </div>
               </div>
             </div>
           </header>
 
           <section className="section">
-            <Information information={this.state.information} set={this.setInformation}/>
+            <Information information={this.state.information} setter={this.setInformation}/>
           </section>
 
           <section className="section">
-            <Stats attributes={this.state.attributes} set={this.setAttributes}/>
+            <Stats attributes={this.state.attributes} setter={this.setAttributes}/>
           </section>
           <section className="section">
-            <SkillTable skills={this.state.skills} set={this.setSkills} attributes={this.state.attributes}/>
+            <SkillTable skills={this.state.skills} setter={this.setSkills} attributes={this.state.attributes}/>
           </section>
 
           <section className="section">
-            <Backstory/>
+            <Backstory backstory={this.state.backstory} setter={this.setBackstory}/>
           </section>
           <section className="section">
             <div className="container">
@@ -76,12 +136,11 @@ class Sheet extends React.Component<{}, SheetData> {
                   <div className="card">
                     <div className="card-header"><p className="card-header-title">随身物品</p></div>
                     <div className="card-content">
-
-                      <ItemList/>
+                      <ItemList items={this.state.items} setter={this.setItems}/>
                     </div>
                   </div>
                 </div>
-                <div className="column"><Note/></div>
+                <div className="column"><Note value={this.state.note} setter={this.setNote}/></div>
               </div>
             </div>
 
