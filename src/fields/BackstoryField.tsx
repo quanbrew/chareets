@@ -5,11 +5,17 @@ interface Props {
   value: string,
   label: string,
   name: string,
+  hint: string;
   onChange: (next: string) => void;
 }
 
 
-export class BackstoryField extends React.Component<Props, { id: string }> {
+interface State {
+  id: string;
+}
+
+
+export class BackstoryField extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {id: getId()};
@@ -21,7 +27,7 @@ export class BackstoryField extends React.Component<Props, { id: string }> {
       <div className="field">
         <div><label className="label" htmlFor={id}>{this.props.label}</label></div>
         <div className="control">
-          <textarea value={this.props.value} id={id} className="textarea"
+          <textarea value={this.props.value} id={id} className="textarea" placeholder={this.props.hint}
                     onChange={e => this.props.onChange(e.currentTarget.value)}/>
         </div>
       </div>
