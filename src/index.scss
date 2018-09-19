@@ -12,6 +12,9 @@ $avatar-width: 250px;
   .upload-hint {
     padding: 4em 0;
     text-align: center;
+    &:hover {
+      background-color: lighten($grey-lighter, 10%);
+    }
   }
   .avatar-upload-icon {
     width: 4em;
