@@ -10,6 +10,7 @@ import {Note} from "./Note";
 import {Skill, skills} from "./skillData";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFileExport, faFileImport, faSave, faUndo} from "@fortawesome/free-solid-svg-icons";
+import {b64Decode, b64Encode} from "./utils";
 
 export type Attributes = Map<string, number>;
 
@@ -20,7 +21,8 @@ export interface SheetData {
   skills: List<Skill>;
   note: string;
   items: List<string>;
-  buffer: string;
+  buffer?: string;
+  version?: string;
 }
 
 
@@ -39,17 +41,29 @@ function sheetData(): SheetData {
 }
 
 
-function sheetDataFromJson(data: string): SheetData {
-  const o = JSON.parse(data);
-  return ({
-    attributes: Map(o.attributes),
-    information: Map(o.information),
-    backstory: Map(o.backstory),
-    skills: List(o.skills),
-    note: o.note,
-    items: List(o.items),
-    buffer: ""
-  });
+function sheetDataFromJson(data: string): SheetData | null {
+  let result: null | SheetData = null;
+  try {
+    const o = JSON.parse(data);
+    result = {
+      attributes: Map(o.attributes),
+      information: Map(o.information),
+      backstory: Map(o.backstory),
+      skills: List(o.skills),
+      note: o.note,
+      items: List(o.items)
+    };
+  }
+  catch (err) {
+    console.log(err);
+  }
+  return result;
+}
+
+
+function sheetDataToJson(data: SheetData): string {
+  data.version = "0.1";
+  return JSON.stringify(data);
 }
 
 
@@ -78,25 +92,36 @@ class Sheet extends React.Component<{}, SheetData> {
   handleLoad = () => {
     const key = "sheet";
     const loaded = localStorage.getItem(key);
-    if (loaded !== null)
-      this.setState(sheetDataFromJson(loaded));
+    if (loaded !== null) {
+      const state = sheetDataFromJson(loaded);
+      if (state !== null) {
+
+        this.setState(state)
+      }
+    }
   };
 
   handleSave = () => {
     const key = "sheet";
-    const str = JSON.stringify(this.state);
+    const str = sheetDataToJson(this.state);
 
     localStorage.setItem(key, str);
   };
 
   handleImport = () => {
-    this.setState(sheetDataFromJson(this.state.buffer));
+    const buffer = this.state.buffer;
+    if (buffer) {
+      const state = sheetDataFromJson(b64Decode(buffer));
+      if (state !== null) {
+        this.setState(state);
+      }
+    }
   };
 
   handleExport = () => {
     const state = {...this.state};
     state.buffer = "";
-    this.setState({buffer: JSON.stringify(state)});
+    this.setState({buffer: b64Encode(sheetDataToJson(state))});
   };
 
   constructor(props: {}) {
