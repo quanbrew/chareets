@@ -28,6 +28,7 @@ export class Information extends React.Component<Props> {
                     <Field label="名称" {...name("name")}/>
                     <Field label="玩家" {...name("player")}/>
                     <Field label="职业" {...name("occupation")}/>
+                    <Field label="时代" {...name("era")}/>
                   </div>
                   <div className="column">
                     <Field label="性别" {...name("sex")}/>
